@@ -101,3 +101,13 @@ document.querySelectorAll("[data-role-jump]").forEach(function(b){b.onclick=func
 // usability pass
 function rolePurpose(role){return {learner:"Learn with Buddy",parent:"Understand Taz and know what to do",teacher:"Teach Taz with clear actions",superuser:"Inspect the full learner intelligence",creator:"Control methodology and system rules"}[role]||"";}
 document.querySelectorAll("[data-role-jump]").forEach(function(b){b.title=rolePurpose(b.dataset.roleJump)});
+
+function friendlyRoleDestination(role){return {learner:"learnerStart",parent:"parentStart",teacher:"teacherStart",superuser:"understanding",creator:"creatorStudio"}[role]||"home"}
+jumpRole=function(role){
+ localStorage.setItem("ciRole",role);document.body.dataset.role=role;
+ var label=document.getElementById("roleLabel");if(label)label.textContent={learner:"Learner",parent:"Parent",teacher:"Teacher",superuser:"Super User",creator:"Creator"}[role];
+ document.querySelectorAll("[data-role-jump],[data-role]").forEach(function(b){var r=b.dataset.roleJump||b.dataset.role;b.classList.toggle("active",r===role)});
+ if(typeof oldApplyRole==="function")oldApplyRole(role);
+ go(friendlyRoleDestination(role));
+}
+document.querySelectorAll("[data-role-jump],[data-role]").forEach(function(b){b.onclick=function(){jumpRole(b.dataset.roleJump||b.dataset.role)}});
