@@ -66,3 +66,15 @@ function startParentDiscovery(){const h=document.getElementById("parentCheck");h
 function startLearnerDiscovery(){const h=document.getElementById("learnerDiscovery");h.innerHTML=discoveryForm("learner")+'<button class="dark discoveryContinue" onclick="showTask()">Continue to Buddy task</button>';bindDiscovery(h);h.scrollIntoView({behavior:"smooth",block:"start"});renderDiscoveryCompare()}
 function renderDiscoveryCompare(){const h=document.getElementById("discoveryCompare"),state=document.getElementById("parentDiscoveryState");const x=discoveryData();const pc=Object.keys(x.parent||{}).length,lc=Object.keys(x.learner||{}).length;if(state)state.innerHTML='<p class="micro"><b>'+pc+'/4</b> Parent checks saved. Taz answers remain separate.</p>';if(!h)return;h.innerHTML=discoveryQuestions.map(function(q,i){const p=x.parent&&x.parent[i],l=x.learner&&x.learner[i];return '<div class="compareRow"><b>'+q.d+'</b><span>Parent<em>'+(p||"Waiting")+'</em></span><span>Taz<em>'+(l||"Waiting")+'</em></span><span>Behaviour<em>Still discovering</em></span></div>'}).join("")}
 renderDiscoveryCompare();
+
+function refreshMapFromEvidence(){
+ var events=[];try{events=JSON.parse(localStorage.getItem("ciEvidence")||"[]")}catch(e){}
+ var has=events.length>0;
+ var states={Thinking:has?"Observed":"Still discovering",Confidence:has?"Observed":"Still discovering",Expression:has?"Observed":"Still discovering",Learning:"Still discovering",Focus:"Still discovering",Independence:"Still discovering"};
+ document.querySelectorAll(".mapStage .node").forEach(function(n){var b=n.querySelector("b"),v=n.querySelector("span");if(b&&v&&states[b.textContent.trim()])v.textContent=states[b.textContent.trim()]});
+ var bs=document.getElementById("behaviourState");if(bs)bs.textContent=has?events.length+" observed learning event"+(events.length===1?"":"s"):"No events yet";
+ var pt=document.getElementById("progressTitle"),px=document.getElementById("progressText");if(has&&pt){pt.textContent=events.length+" learning event"+(events.length===1?"":"s")+" captured";px.textContent="Immediate evidence captured. Retention, transfer and independence still need later checks."}
+}
+var previousRecordEvidence=recordEvidence;
+recordEvidence=function(){previousRecordEvidence();refreshMapFromEvidence()}
+refreshMapFromEvidence();
