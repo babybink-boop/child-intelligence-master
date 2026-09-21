@@ -97,3 +97,7 @@ jumpRole=function(role){
  go(roleDestination(role));
 }
 document.querySelectorAll("[data-role-jump]").forEach(function(b){b.onclick=function(){jumpRole(b.dataset.roleJump)}});
+
+// usability pass
+function rolePurpose(role){return {learner:"Learn with Buddy",parent:"Understand Taz and know what to do",teacher:"Teach Taz with clear actions",superuser:"Inspect the full learner intelligence",creator:"Control methodology and system rules"}[role]||"";}
+document.querySelectorAll("[data-role-jump]").forEach(function(b){b.title=rolePurpose(b.dataset.roleJump)});
