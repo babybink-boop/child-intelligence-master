@@ -78,3 +78,12 @@ function refreshMapFromEvidence(){
 var previousRecordEvidence=recordEvidence;
 recordEvidence=function(){previousRecordEvidence();refreshMapFromEvidence()}
 refreshMapFromEvidence();
+
+function jumpRole(role){
+ if(typeof applyRole==="function")applyRole(role);
+ var label=document.getElementById("roleLabel");if(label)label.textContent={learner:"Learner",parent:"Parent",teacher:"Teacher",superuser:"Super User",creator:"Creator"}[role];
+ document.querySelectorAll("[data-role-jump]").forEach(function(b){b.classList.toggle("active",b.dataset.roleJump===role)});
+ if(typeof openRoleHome==="function")openRoleHome(role);
+}
+document.querySelectorAll("[data-role-jump]").forEach(function(b){b.onclick=function(){jumpRole(b.dataset.roleJump)}});
+setTimeout(function(){jumpRole(localStorage.getItem("ciRole")||"superuser")},0);
