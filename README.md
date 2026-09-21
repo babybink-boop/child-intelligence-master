@@ -1,0 +1,1 @@
+# Child Intelligence Master\n\nSingle master codebase.\n\nWorking now: integrated clean UI, role navigation, Living Map shell, Buddy style state, English evidence capture, local persistence.\n\nNext: integrate recovered original Zodiac artwork; expand assessment/intelligence loop; Firebase persistence.\n\nTruth rule: unknown stays Still discovering; prediction is not observation.
