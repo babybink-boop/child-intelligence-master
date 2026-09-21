@@ -48,3 +48,21 @@ function openRoleHome(role){
 const oldApplyRole=applyRole;
 applyRole=function(role){oldApplyRole(role);document.querySelectorAll(".railBtn[data-page=home] span").forEach(function(x){x.textContent={learner:"Buddy Home",parent:"Parent Home",teacher:"Teacher Home",superuser:"360 Home",creator:"Creator Home"}[role]||"Home"});openRoleHome(role)}
 document.querySelectorAll(".roleSwitch button").forEach(function(b){b.onclick=function(){applyRole(b.dataset.role)}});applyRole(currentRole);
+
+const discoveryQuestions=[
+ {d:"Thinking",p:"When Taz disagrees with an answer, what do you usually notice?",c:"If an answer does not make sense to you, what do you usually do?",o:["Work it out myself","Ask why","Accept it","Depends"]},
+ {d:"Confidence",p:"When Taz is unsure, what do you usually notice?",c:"When you are unsure, what do you usually do?",o:["Still answer","Ask for help","Check again","Avoid answering"]},
+ {d:"Learning",p:"When work gets difficult, what help seems useful first?",c:"If you are stuck, what help would you want first?",o:["One hint","An example","Explain steps","More time"]},
+ {d:"Expression",p:"How does Taz usually explain a difficult idea best?",c:"How do you prefer explaining a difficult idea?",o:["Writing","Talking","Example","Depends"]}
+];
+function discoveryData(){try{return JSON.parse(localStorage.getItem("ciDiscovery")||'{"parent":{},"learner":{}}')}catch(e){return {parent:{},learner:{}}}}
+function saveDiscovery(x){localStorage.setItem("ciDiscovery",JSON.stringify(x));renderDiscoveryCompare()}
+function discoveryForm(who){
+ const x=discoveryData(),answers=x[who]||{},isParent=who==="parent";
+ return '<div class="discoveryForm"><span class="kicker">'+(isParent?"PARENT OBSERVATION":"TAZ SELF VIEW")+'</span><h3>'+(isParent?"What have you actually noticed?":"There are no right answers.")+'</h3>'+discoveryQuestions.map(function(q,i){return '<div class="discoverQ"><b>'+q.d+'</b><p>'+(isParent?q.p:q.c)+'</p><div class="discoverOptions">'+q.o.map(function(v){return '<button class="'+(answers[i]===v?"selected":"")+'" data-w="'+who+'" data-i="'+i+'" data-v="'+v+'">'+v+'</button>'}).join("")+'</div></div>'}).join("")+'<p class="micro">These answers are kept separate until real learning behaviour supports or contradicts them.</p></div>';
+}
+function bindDiscovery(host){host.querySelectorAll(".discoverOptions button").forEach(function(b){b.onclick=function(){const x=discoveryData();x[b.dataset.w]=x[b.dataset.w]||{};x[b.dataset.w][b.dataset.i]=b.dataset.v;saveDiscovery(x);if(b.dataset.w==="parent")startParentDiscovery();else startLearnerDiscovery()}})}
+function startParentDiscovery(){const h=document.getElementById("parentCheck");h.innerHTML=discoveryForm("parent");bindDiscovery(h);renderDiscoveryCompare()}
+function startLearnerDiscovery(){const h=document.getElementById("learnerDiscovery");h.innerHTML=discoveryForm("learner")+'<button class="dark discoveryContinue" onclick="showTask()">Continue to Buddy task</button>';bindDiscovery(h);h.scrollIntoView({behavior:"smooth",block:"start"});renderDiscoveryCompare()}
+function renderDiscoveryCompare(){const h=document.getElementById("discoveryCompare"),state=document.getElementById("parentDiscoveryState");const x=discoveryData();const pc=Object.keys(x.parent||{}).length,lc=Object.keys(x.learner||{}).length;if(state)state.innerHTML='<p class="micro"><b>'+pc+'/4</b> Parent checks saved. Taz answers remain separate.</p>';if(!h)return;h.innerHTML=discoveryQuestions.map(function(q,i){const p=x.parent&&x.parent[i],l=x.learner&&x.learner[i];return '<div class="compareRow"><b>'+q.d+'</b><span>Parent<em>'+(p||"Waiting")+'</em></span><span>Taz<em>'+(l||"Waiting")+'</em></span><span>Behaviour<em>Still discovering</em></span></div>'}).join("")}
+renderDiscoveryCompare();
