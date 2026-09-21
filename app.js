@@ -25,3 +25,8 @@ async function runIntelligenceEngine(){
  finally{if(btn){btn.disabled=false;btn.textContent="Generate intelligence"}}
 }
 (()=>{try{const saved=JSON.parse(localStorage.getItem("ciIntelligence")||"null");if(saved)renderHypotheses(saved)}catch{}})();
+
+const rolePages={learner:["home","buddy","progress","toolkit"],parent:["home","understanding","progress","toolkit","parent"],teacher:["teacher","progress"],superuser:["home","buddy","understanding","progress","toolkit","parent","teacher","metaphysics","lab"],creator:["home","understanding","metaphysics","lab"]};
+let currentRole=localStorage.getItem("ciRole")||"superuser";
+function applyRole(role){currentRole=role;localStorage.setItem("ciRole",role);document.body.dataset.role=role;document.querySelectorAll(".roleSwitch button").forEach(function(b){b.classList.toggle("active",b.dataset.role===role)});document.querySelectorAll(".railBtn[data-page]").forEach(function(b){b.classList.toggle("roleHidden",rolePages[role].indexOf(b.dataset.page)<0)});}
+document.querySelectorAll(".roleSwitch button").forEach(function(b){b.onclick=function(){applyRole(b.dataset.role)}});applyRole(currentRole);
