@@ -111,3 +111,57 @@ jumpRole=function(role){
  go(friendlyRoleDestination(role));
 }
 document.querySelectorAll("[data-role-jump],[data-role]").forEach(function(b){b.onclick=function(){jumpRole(b.dataset.roleJump||b.dataset.role)}});
+
+
+// REAL INTELLIGENCE LOOP V1
+// Keeps source, hypotheses, observations, teaching decisions and outcomes separate.
+function ciEvidenceList(){
+  try{
+    var x=JSON.parse(localStorage.getItem("ciEvidence")||"[]");
+    return Array.isArray(x)?x:(x?[x]:[]);
+  }catch(e){return []}
+}
+function ciSaveEvidence(list){localStorage.setItem("ciEvidence",JSON.stringify(list));}
+recordEvidence=function(){
+  var a=answer.value.trim();
+  if(!a){taskResult.textContent="Tell Buddy what you think first.";return}
+  var list=ciEvidenceList();
+  var e={id:"ev_"+Date.now(),time:new Date().toLocaleString(),task:"English explanation",answer:a,confidence:+confidence.value,status:"Observed",source:"learner behaviour",outcome:null};
+  list.push(e);ciSaveEvidence(list);
+  taskResult.innerHTML="<b>Recorded.</b> This is evidence, not a permanent label. Buddy will use it to choose the next test.";
+  renderEvidence();refreshMapFromEvidence();renderRealLoop();
+}
+renderEvidence=function(){
+  var list=ciEvidenceList(),el=document.getElementById("eventLog");
+  if(el)el.innerHTML=list.length?list.slice().reverse().map(function(e){return '<div class="event"><b>'+escapeHtml(e.status||"Observed")+'</b> · '+escapeHtml(e.task)+' · confidence '+escapeHtml(e.confidence)+'/5<br><small>'+escapeHtml(e.time)+' · '+(e.outcome?escapeHtml(e.outcome):"Retention and transfer not tested yet")+'</small></div>'}).join(""):"<p>No behavioural evidence recorded yet.</p>";
+  var bs=document.getElementById("behaviourState");if(bs)bs.textContent=list.length+" observed event"+(list.length===1?"":"s");
+  var pt=document.getElementById("progressTitle"),px=document.getElementById("progressText");if(pt){pt.textContent=list.length?list.length+" learning event"+(list.length===1?"":"s")+" captured":"No behavioural evidence yet";px.textContent=list.length?"Immediate evidence captured. Retention, transfer and independence still need later checks.":"Complete a Buddy task to start building evidence."}
+}
+refreshMapFromEvidence=function(){
+  var events=ciEvidenceList(),has=events.length>0;
+  var states={Thinking:has?"Observed":"Still discovering",Confidence:has?"Observed":"Still discovering",Expression:has?"Observed":"Still discovering",Learning:"Still discovering",Focus:"Still discovering",Independence:"Still discovering"};
+  document.querySelectorAll(".mapStage .node").forEach(function(n){var b=n.querySelector("b"),v=n.querySelector("span");if(b&&v&&states[b.textContent.trim()])v.textContent=states[b.textContent.trim()]});
+  var bs=document.getElementById("behaviourState");if(bs)bs.textContent=has?events.length+" observed learning event"+(events.length===1?"":"s"):"No events yet";
+}
+function buildLocalIntelligence(){
+  var events=ciEvidenceList(),d=discoveryData(),latest=events[events.length-1];
+  var hypotheses=[
+    {domain:"Thinking",finding:"Taz may respond better when asked to explain reasoning before being corrected.",status:events.length?"Observed":"Predicted",why:events.length?"A real English explanation has been captured; the pattern still needs repetition.":"Starting profile and discovery inputs suggest this is worth testing, not assuming.",validation_needed:["Repeat across 3 different English tasks","Retest after 7+ days","Check whether prompts can be reduced"],buddy_test:"Ask for his reasoning first, then give one targeted prompt.",teaching_experiment:"Compare direct correction vs one reasoning prompt.",success_criteria:["Better explanation quality","Less prompting","Works on a different task"]},
+    {domain:"Independence",finding:"The system does not yet know how quickly support can be removed.",status:"Still discovering",why:"Independence requires repeated outcomes, not profile data.",validation_needed:["Track hints used","Retest without the hint","Check transfer"],buddy_test:"Use one hint, then remove support on the next item.",teaching_experiment:"Record whether Taz can apply the same idea independently.",success_criteria:["Fewer hints","Correct transfer","Retained later"]}
+  ];
+  return {engine_version:"local-loop-v1",hypotheses:hypotheses,role_output:{priority:latest?"Use the latest observed explanation as the starting point.":"Collect one real learning event first.",do:"Ask Taz to explain his reasoning, then give only one prompt.",if_stuck:"Show one example, then return control to Taz.",watch_for:"Self-correction, help-seeking, confidence, transfer and independence.",evidence_count:events.length,parent_checks:Object.keys(d.parent||{}).length,learner_checks:Object.keys(d.learner||{}).length}};
+}
+runIntelligenceEngine=async function(){
+  var btn=document.getElementById("runEngineBtn");if(btn){btn.disabled=true;btn.textContent="Generating..."}
+  try{
+    var data=buildLocalIntelligence();renderHypotheses(data);renderRealLoop();
+    var state=document.getElementById("engineState");if(state)state.innerHTML="<b>Intelligence loop updated</b><span>"+ciEvidenceList().length+" behavioural event(s). Hypotheses remain separate from observed facts.</span>";
+  }finally{if(btn){btn.disabled=false;btn.textContent="Update intelligence"}}
+}
+function renderRealLoop(){
+  var lab=document.querySelector("#lab .labFlow");if(!lab)return;
+  var n=ciEvidenceList().length, data=buildLocalIntelligence(), decision=data.role_output;
+  lab.innerHTML='<div><span class="kicker">RAW</span><h3>Source stays source</h3><p>Birth/profile, Parent and Taz inputs remain separate.</p></div><div class="arrow">→</div><div><span class="kicker">HYPOTHESIS</span><h3>Test, never assume</h3><p>'+escapeHtml(data.hypotheses[0].finding)+'</p></div><div class="arrow">→</div><div><span class="kicker">VALIDATION</span><h3>'+n+' behaviour event'+(n===1?"":"s")+'</h3><p>Need repetition, retention and transfer before establishing a finding.</p></div><div class="arrow">→</div><div><span class="kicker">TEACHING DECISION</span><h3>One prompt, then return control</h3><p>'+escapeHtml(decision.do)+'</p></div><div class="arrow">→</div><div><span class="kicker">BUDDY → EVIDENCE → OUTCOME</span><h3>Close the loop</h3><p>Buddy tests the decision; outcome updates the intelligence instead of creating a fixed label.</p></div>';
+  renderRoleIntelligence(data);
+}
+renderEvidence();refreshMapFromEvidence();renderRealLoop();
