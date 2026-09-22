@@ -165,3 +165,64 @@ function renderRealLoop(){
   renderRoleIntelligence(data);
 }
 renderEvidence();refreshMapFromEvidence();renderRealLoop();
+
+
+// INTELLIGENCE RECORD V2 — longitudinal finding → experiment → outcome → update
+function ciRecords(){
+  try{return JSON.parse(localStorage.getItem("ciRecords")||"[]")}catch(e){return []}
+}
+function ciSaveRecords(x){localStorage.setItem("ciRecords",JSON.stringify(x))}
+function ciEnsureRecord(){
+  var rs=ciRecords();
+  if(!rs.length){
+    rs.push({id:"finding_reasoning_support",learner_id:tazLearner.id,domain:"Thinking",finding:"Taz may benefit when he explains his reasoning before correction.",status:"Predicted",sources:["metaphysics hypothesis","learner discovery","parent discovery"],experiments:[],helped:0,did_not_help:0,retention_checks:0,transfer_checks:0,independent_successes:0,next_action:"Collect a real explanation, then test one-prompt support.",updated_at:new Date().toISOString()});
+    ciSaveRecords(rs);
+  }
+  return rs[0];
+}
+function ciStatus(r){
+  var n=r.experiments.length, positive=r.helped, retained=r.retention_checks, transferred=r.transfer_checks, independent=r.independent_successes;
+  if(n===0)return "Predicted";
+  if(n<3)return "Emerging";
+  if(positive===0&&r.did_not_help>=2)return "Contradicted";
+  if(positive>=2&&retained<1)return "Observed";
+  if(positive>=2&&retained>=1&&transferred>=1&&independent>=1)return "Established";
+  return "Tested";
+}
+function ciRecordOutcome(result){
+  var rs=ciRecords(),r=ciEnsureRecord();rs=ciRecords();r=rs.find(function(x){return x.id==="finding_reasoning_support"})||rs[0];
+  var ev=ciEvidenceList(),latest=ev[ev.length-1]; if(!latest)return;
+  var exp={id:"exp_"+Date.now(),evidence_id:latest.id,method:"One reasoning prompt, then return control",immediate_result:result.helped?"helped":"did not help",hints:+result.hints,independent:!!result.independent,retention:result.retention||"not tested",transfer:result.transfer||"not tested",time:new Date().toISOString()};
+  r.experiments.push(exp); if(result.helped)r.helped++;else r.did_not_help++;
+  if(result.retention==="retained")r.retention_checks++;
+  if(result.transfer==="transferred")r.transfer_checks++;
+  if(result.independent)r.independent_successes++;
+  r.status=ciStatus(r);
+  r.next_action=r.status==="Established"?"Use this method when useful, while continuing to check that Taz stays independent.":r.retention_checks<1?"Retest later to see if the learning is retained.":r.transfer_checks<1?"Try the same skill on a different English task to check transfer.":r.independent_successes<1?"Reduce support and check whether Taz can do it independently.":"Repeat once more before treating this as reliable.";
+  r.updated_at=new Date().toISOString();ciSaveRecords(rs);
+  latest.outcome=exp.immediate_result+" · "+exp.hints+" hint(s) · "+(exp.independent?"independent":"support still needed");ciSaveEvidence(ev);
+  renderEvidence();renderIntelligenceRecord();renderRealLoop();
+}
+function renderOutcomeCapture(){
+  var task=document.getElementById("task");if(!task||document.getElementById("outcomeCapture"))return;
+  var box=document.createElement("div");box.id="outcomeCapture";box.className="task hidden";
+  box.innerHTML='<span class="kicker">DID IT WORK?</span><h3>Record the teaching outcome</h3><p>After Buddy gives one reasoning prompt, record what actually happened.</p><div class="discoverOptions"><button data-help="yes">Helped</button><button data-help="no">Did not help</button></div><label>Hints used <select id="outcomeHints"><option>0</option><option>1</option><option>2</option><option>3</option></select></label><label><input id="outcomeIndependent" type="checkbox"> Taz completed it independently</label><button id="saveOutcome" class="dark">Save outcome</button><p id="outcomeSaved"></p>';
+  task.parentNode.insertBefore(box,task.nextSibling);var helped=null;
+  box.querySelectorAll("[data-help]").forEach(function(b){b.onclick=function(){helped=b.dataset.help==="yes";box.querySelectorAll("[data-help]").forEach(function(x){x.classList.toggle("selected",x===b)})}});
+  document.getElementById("saveOutcome").onclick=function(){if(helped===null){outcomeSaved.textContent="Choose Helped or Did not help first.";return}ciRecordOutcome({helped:helped,hints:+outcomeHints.value,independent:outcomeIndependent.checked});outcomeSaved.textContent="Saved. The finding and next action have been updated from this outcome."};
+}
+var ciRecordEvidenceV1=recordEvidence;
+recordEvidence=function(){ciRecordEvidenceV1();ciEnsureRecord();renderOutcomeCapture();var b=document.getElementById("outcomeCapture");if(b){b.classList.remove("hidden");b.scrollIntoView({behavior:"smooth",block:"start"})}renderIntelligenceRecord()}
+function renderIntelligenceRecord(){
+  var r=ciEnsureRecord(),lab=document.getElementById("hypothesisGrid");if(!lab)return;
+  var summary='<article class="hypothesisCard"><div class="hypTop"><span class="status predicted">'+escapeHtml(r.status)+'</span><small>'+escapeHtml(r.domain)+'</small></div><h3>'+escapeHtml(r.finding)+'</h3><p><b>Evidence:</b> Tried '+r.experiments.length+' time(s); helped '+r.helped+'; did not help '+r.did_not_help+'.</p><p><b>Long-term:</b> Retention '+r.retention_checks+' · Transfer '+r.transfer_checks+' · Independent '+r.independent_successes+'.</p><div class="testBox"><b>Next best action</b><p>'+escapeHtml(r.next_action)+'</p></div><p class="micro">Status changes from outcomes, not from profile prediction alone.</p></article>';
+  lab.innerHTML=summary;
+}
+var ciBuildV1=buildLocalIntelligence;
+buildLocalIntelligence=function(){
+  var data=ciBuildV1(),r=ciEnsureRecord();
+  data.engine_version="intelligence-record-v2";data.hypotheses[0].status=r.status;
+  data.hypotheses[0].why="Tried "+r.experiments.length+" time(s); helped "+r.helped+"; did not help "+r.did_not_help+". Retention "+r.retention_checks+", transfer "+r.transfer_checks+", independent "+r.independent_successes+".";
+  data.role_output.priority=r.next_action;data.role_output.record_status=r.status;return data;
+}
+renderOutcomeCapture();renderIntelligenceRecord();
