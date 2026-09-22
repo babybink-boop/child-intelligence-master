@@ -243,3 +243,6 @@ document.querySelectorAll("[data-home-style]").forEach(b=>b.onclick=()=>syncHome
 
 // Age-adaptive learner skin. Taz age 14 => Teen 13–15.
 (function(){var learnerAge=14;var skin=learnerAge<=9?"junior":learnerAge<=12?"preteen":learnerAge<=15?"teen":learnerAge<=18?"senior":"adult";document.body.dataset.ageSkin=skin;var home=document.querySelector(".learnerV2");if(home)home.dataset.ageSkin=skin;var btn=document.getElementById("skinToggle");if(btn)btn.onclick=function(){alert("Taz is using the 13–15 learner look. Younger and older skins will use the same intelligence with age-appropriate presentation.")};})();
+
+// Final learner-home boot guard: overrides legacy role boot timers.
+window.addEventListener("load",function(){setTimeout(function(){localStorage.setItem("ciRole","learner");document.body.dataset.role="learner";if(location.hash===""||location.hash==="#home"){go("home")}},50)});
