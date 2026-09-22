@@ -233,3 +233,7 @@ let selectedZodiac=localStorage.getItem("ciZodiac")||"Dragon";
 function selectZodiac(name){selectedZodiac=name;localStorage.setItem("ciZodiac",name);document.querySelectorAll(".zodiacBuddy").forEach(b=>b.classList.toggle("selected",b.dataset.zodiac===name));document.querySelectorAll(".buddyTile h3").forEach(x=>x.textContent=name);}
 document.querySelectorAll(".zodiacBuddy").forEach(b=>b.onclick=()=>{selectZodiac(b.dataset.zodiac);go("buddy")});selectZodiac(selectedZodiac);
 document.querySelectorAll(".approvedNav [data-page]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".approvedNav button").forEach(x=>x.classList.toggle("active",x===b));go(b.dataset.page)});
+
+// Approved home Buddy style selector
+function syncHomeBuddyStyle(name){var key=name.toLowerCase();var img=document.getElementById("homeDragon");if(img)img.src="dragon-"+key+".png";document.querySelectorAll("[data-home-style]").forEach(b=>b.classList.toggle("selected",b.dataset.homeStyle===key));if(styleData[name]){current=name;localStorage.setItem("ciBuddyStyle",name);renderStyles();}}
+document.querySelectorAll("[data-home-style]").forEach(b=>b.onclick=()=>syncHomeBuddyStyle(b.dataset.homeStyle[0].toUpperCase()+b.dataset.homeStyle.slice(1)));syncHomeBuddyStyle(current);
