@@ -69,3 +69,12 @@ body{background:#f7f8f9;color:#202a34}
 .childMiniTop{font-size:14px}.cardNum{width:30px;height:30px;font-size:13px}
 .approvedHomeGrid .pink,.approvedHomeGrid [style*="pink"],.approvedHomeGrid [style*="#fce"],.approvedHomeGrid [style*="#ffd"]{background:#eef8f5!important}
 .childHomeCard,.zodiacHomeCard,.livingHomeCard{accent-color:#3a766f}
+
+/* HOTFIX: render the approved Home immediately below the header */
+body{background:#f7fbfa!important}
+.rail{display:none!important}.shell{margin-left:0!important}
+.approvedTop{height:80px!important;position:relative!important;z-index:20}
+#home.page.active{display:block!important;padding:22px 30px 48px!important;max-width:1500px!important;margin:0 auto!important}
+.approvedHomeGrid{display:grid!important;visibility:visible!important;opacity:1!important;grid-template-columns:minmax(330px,.9fr) minmax(330px,.9fr) minmax(430px,1.25fr)!important;align-items:start!important}
+.childHomeCard,.zodiacHomeCard,.livingHomeCard{display:block!important;visibility:visible!important;opacity:1!important}
+@media(max-width:1100px){.approvedHomeGrid{grid-template-columns:1fr!important}}
