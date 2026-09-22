@@ -86,7 +86,7 @@ function jumpRole(role){
  if(typeof openRoleHome==="function")openRoleHome(role);
 }
 document.querySelectorAll("[data-role-jump]").forEach(function(b){b.onclick=function(){jumpRole(b.dataset.roleJump)}});
-setTimeout(function(){jumpRole(localStorage.getItem("ciRole")||"superuser")},0);
+setTimeout(function(){localStorage.setItem("ciRole","learner");document.body.dataset.role="learner";go("home")},0);
 
 function roleDestination(role){return {learner:"buddy",parent:"parent",teacher:"teacher",superuser:"understanding",creator:"creatorStudio"}[role]||"home"}
 var priorJumpRole=jumpRole;
@@ -237,3 +237,6 @@ document.querySelectorAll(".approvedNav [data-page]").forEach(b=>b.onclick=()=>{
 // Approved home Buddy style selector
 function syncHomeBuddyStyle(name){var key=name.toLowerCase();var img=document.getElementById("homeDragon");if(img)img.src="dragon-"+key+".png";document.querySelectorAll("[data-home-style]").forEach(b=>b.classList.toggle("selected",b.dataset.homeStyle===key));if(styleData[name]){current=name;localStorage.setItem("ciBuddyStyle",name);renderStyles();}}
 document.querySelectorAll("[data-home-style]").forEach(b=>b.onclick=()=>syncHomeBuddyStyle(b.dataset.homeStyle[0].toUpperCase()+b.dataset.homeStyle.slice(1)));syncHomeBuddyStyle(current);
+
+// Learner-first routing lock: Home always means Learner Home V2
+(function(){localStorage.setItem("ciRole","learner");document.body.dataset.role="learner";var homeButtons=document.querySelectorAll('[data-page="home"]');homeButtons.forEach(function(b){b.onclick=function(e){e.preventDefault();localStorage.setItem("ciRole","learner");document.body.dataset.role="learner";go("home")}});go("home");})();
