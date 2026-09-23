@@ -25,3 +25,8 @@ body{font-size:16px}
 .buddyPanel .dragonVideo{width:170px;height:210px;margin:0 auto;filter:drop-shadow(0 12px 18px rgba(35,55,43,.10))}
 .chatDragon .dragonVideo{width:240px;height:340px;margin:0 auto;filter:drop-shadow(0 16px 22px rgba(35,55,43,.12))}
 @media(max-width:650px){.dragon .dragonVideo{width:180px;height:180px}.chatDragon .dragonVideo{width:150px;height:190px}}
+
+/* Make every dashboard surface earn its space */
+.statGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}.statGrid div{background:#f6f8f6;border:1px solid #e8ebe8;border-radius:9px;padding:10px}.statGrid b,.statGrid span{display:block}.statGrid b{font-size:18px}.statGrid span{font-size:11px;color:#7c837e;margin-top:2px}.notice small{font-size:10px;color:#939994}.nextCheck{width:100%;margin-top:14px;padding:10px;border:1px solid #dfe4df;background:#fff;border-radius:8px;font-size:12px;font-weight:700;text-align:left}.insightStrip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.insightStrip>div{border:1px solid #e4e8e4;background:#fafbfa;border-radius:11px;padding:14px 15px;min-height:108px}.insightStrip small,.insightStrip b,.insightStrip span{display:block}.insightStrip small{font-size:10px;letter-spacing:.8px;color:#8d938f;font-weight:800}.insightStrip b{font-size:14px;margin:7px 0 5px}.insightStrip span{font-size:12px;line-height:1.45;color:#747b76}
+@media(max-width:900px){.insightStrip{grid-template-columns:1fr 1fr}.insightStrip>div:last-child{grid-column:1/-1}}
+@media(max-width:650px){.insightStrip{grid-template-columns:1fr}.insightStrip>div:last-child{grid-column:auto}.statGrid{grid-template-columns:1fr 1fr}}
