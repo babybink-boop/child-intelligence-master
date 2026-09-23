@@ -246,3 +246,56 @@ document.querySelectorAll("[data-home-style]").forEach(b=>b.onclick=()=>syncHome
 
 // Final learner-home boot guard: overrides legacy role boot timers.
 window.addEventListener("load",function(){setTimeout(function(){localStorage.setItem("ciRole","learner");document.body.dataset.role="learner";if(location.hash===""||location.hash==="#home"){go("home")}},50)});
+
+
+/* AI-native learner interaction v1 */
+function openAdaptiveWorkspace(){go("buddy");window.scrollTo(0,0)}
+function launchIntent(kind){
+ const copy={test:["Okay. We won’t revise everything.","Let’s find the two things worth fixing first."],stuck:["Show me the part that’s annoying you.","We’ll work out what’s actually blocking you."],challenge:["Alright. No easy mode.","I’ll make the next one stretch you, not bury you."],upload:["Bring it in.","Paste or type the question for now — file capture comes next."]}[kind]||["I’m listening.","What’s on your mind?"];
+ var g=document.getElementById("buddyGreeting"),p=document.getElementById("buddyPrompt"),i=document.getElementById("buddyInput");
+ if(g)g.textContent=copy[0];if(p)p.textContent=copy[1];if(i)i.focus();
+}
+function sendBuddyMessage(){
+ var i=document.getElementById("buddyInput");if(!i||!i.value.trim())return;
+ var text=i.value.trim(),g=document.getElementById("buddyGreeting"),p=document.getElementById("buddyPrompt");
+ if(g)g.textContent="Got it.";if(p)p.textContent="I’ll start small and adjust from what you do — not from a label.";
+ setTimeout(openAdaptiveWorkspace,650);
+}
+function chooseAdaptiveAnswer(btn,value){
+ document.querySelectorAll(".answerChips button").forEach(x=>x.classList.remove("selected"));btn.classList.add("selected");
+ localStorage.setItem("ciAdaptiveChoice",value);
+ setTimeout(function(){document.getElementById("workspaceIntro").classList.add("hidden");document.getElementById("workspaceWhy").classList.remove("hidden");},250);
+}
+function finishAdaptiveMoment(){
+ var r=document.getElementById("adaptiveReason");if(!r||!r.value.trim()){r&&r.focus();return}
+ var list=ciEvidenceList();list.push({id:"ev_"+Date.now(),time:new Date().toLocaleString(),task:"Inference: Maya scenario",answer:r.value.trim(),confidence:null,status:"Observed",source:"learner behaviour",outcome:"Used contextual clue explanation"});ciSaveEvidence(list);
+ document.getElementById("workspaceWhy").classList.add("hidden");document.getElementById("workspaceInsight").classList.remove("hidden");
+ var m=document.getElementById("miniThought");if(m)m.textContent="Nice. I noticed how you used the clue. I’m checking whether that’s a pattern.";
+ renderEvidence();refreshMapFromEvidence();
+}
+function nextAdaptiveChallenge(){
+ document.getElementById("workspaceInsight").innerHTML='<span class="momentTag">NEW CONTEXT · SAME SKILL</span><h1>Now let’s see if it transfers.</h1><p>A message says: <b>“Sure, whatever you want.”</b> The person replies immediately, then stops responding. What might the words alone be hiding?</p><div class="insightActions"><button class="adaptivePrimary" onclick="go(\'home\')">I’ll come back to this →</button><button onclick="go(\'myMind\')">See what Buddy learned</button></div>';
+}
+function toggleBuddyHelp(){
+ var m=document.getElementById("miniThought"),mm=document.getElementById("mobileBuddyText"),s=document.getElementById("supportLevel"),c=document.getElementById("supportCopy");
+ if(m)m.textContent="Try this: point to one detail in the sentence before deciding.";
+ if(mm)mm.textContent="Look for one detail first.";
+ if(s)s.textContent="1 clue";
+ if(c)c.textContent="One clue given · control returned to Taz";
+}
+const mindCopy={
+ Thinking:["Thinking","You may understand ideas better when you explain why before someone corrects you.","Seen 1 time","I’ll ask for your reason first, then give one clue only if you need it."],
+ Confidence:["Confidence","I’m still learning what you do when two answers both seem possible.","Still discovering","I’ll watch whether you change a good answer when uncertainty appears."],
+ Expression:["Expression","I don’t know yet whether talking, writing or examples help you express difficult ideas best.","Still discovering","I’ll let you answer in different ways and compare what helps."],
+ Independence:["Independence","This matters most: I’m checking whether you can use a skill again with less help.","Still discovering","When something works, I’ll slowly step back and see if you still own it."],
+ Focus:["Focus","I don’t have enough real behaviour yet to know when your attention drops or strengthens.","Still discovering","I’ll use short changes in task type and watch what happens."],
+ Learning:["Learning","I’m testing which kind of support actually changes your next attempt.","Still discovering","Methods only stay in your toolkit after they help more than once."]
+};
+function showMindDetail(key){
+ var d=document.getElementById("mindDetail"),x=mindCopy[key]||mindCopy.Thinking;if(!d)return;
+ d.innerHTML='<span class="kicker">BUDDY NOTICED</span><h2>'+x[0]+'</h2><p>'+x[1]+'</p><div class="evidenceCount"><b>'+x[2]+'</b><span>Buddy separates guesses from repeated evidence.</span></div><div class="mindTry"><span>WHAT I’LL TRY NEXT</span><b>'+x[3]+'</b></div><button onclick="go(\'buddy\')">Test this with Buddy →</button>';
+}
+(function(){
+ if(!titles.myMind)titles.myMind="MY MIND";
+ var inp=document.getElementById("buddyInput");if(inp)inp.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendBuddyMessage()}});
+})();
