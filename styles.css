@@ -18,3 +18,10 @@ body{font-size:16px}
 .chat h1{font-size:38px}.bubble{font-size:15px}.chips button{font-size:13px}.chatInput input{font-size:14px}
 @media(max-width:900px){.side{width:190px}.app main{margin-left:220px}}
 @media(max-width:650px){.app main{margin-left:0;padding:10px}.hello h1{font-size:28px}.heroCopy h2{font-size:27px}#home{padding:20px}}
+
+/* Actual transparent animated Dragon Buddy */
+.dragonVideo{display:block;width:100%;height:100%;object-fit:contain;background:transparent;pointer-events:none}
+.dragon .dragonVideo{position:relative;z-index:1;width:235px;height:235px;filter:drop-shadow(0 14px 20px rgba(35,55,43,.12))}
+.buddyPanel .dragonVideo{width:170px;height:210px;margin:0 auto;filter:drop-shadow(0 12px 18px rgba(35,55,43,.10))}
+.chatDragon .dragonVideo{width:240px;height:340px;margin:0 auto;filter:drop-shadow(0 16px 22px rgba(35,55,43,.12))}
+@media(max-width:650px){.dragon .dragonVideo{width:180px;height:180px}.chatDragon .dragonVideo{width:150px;height:190px}}
