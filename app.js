@@ -299,3 +299,25 @@ function showMindDetail(key){
  if(!titles.myMind)titles.myMind="MY MIND";
  var inp=document.getElementById("buddyInput");if(inp)inp.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendBuddyMessage()}});
 })();
+
+
+/* Learner shell hard-lock v2: child sees Buddy, not admin intelligence UI */
+(function(){
+  const allowed=new Set(["home","buddy","myMind"]);
+  const rawGo=go;
+  go=function(id){
+    if(document.body.dataset.role==="learner" && !allowed.has(id)) id="home";
+    rawGo(id);
+    document.querySelectorAll(".approvedNav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+  };
+  localStorage.setItem("ciRole","learner");
+  document.body.dataset.role="learner";
+  document.querySelectorAll(".profileBtn").forEach(b=>{
+    b.onclick=function(e){e.preventDefault();go("myMind")};
+  });
+  document.querySelectorAll(".brandApproved").forEach(b=>{
+    b.style.cursor="pointer"; b.onclick=function(){go("home")};
+  });
+  window.addEventListener("load",()=>setTimeout(()=>go("home"),0));
+  go("home");
+})();
