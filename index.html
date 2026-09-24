@@ -65,14 +65,33 @@
 </section>
 
 <section class="view" id="mind">
-      <div class="mindHead"><small>MY MIND</small><h1>This is what Buddy is learning about you.</h1><p>Nothing here is permanent. Your real behaviour can change Buddy's mind.</p></div>
-      <div class="mindGrid"><article class="constellation"><div class="center"><span>T</span><b>Taz</b><small>still discovering</small></div><button class="node n1" data-detail="thinking">Thinking<small>1 observation</small></button><button class="node n2" data-detail="confidence">Confidence<small>discovering</small></button><button class="node n3" data-detail="expression">Expression<small>discovering</small></button><button class="node n4" data-detail="independence">Independence<small>discovering</small></button><button class="node n5" data-detail="focus">Focus<small>discovering</small></button></article><aside class="mindDetail"><small>BUDDY CURRENTLY THINKS</small><h2 id="mindTitle">You may reason better when you find the clue first.</h2><p id="mindText">I've seen this once. I need to see it again in a different kind of task before I trust it.</p><div><b>Evidence</b><span id="mindEvidence">Tried 1 time · still checking</span></div><div><b>Next test</b><span id="mindNext">A different inference question</span></div></aside></div>
+  <div class="pageHeader"><div><small>MY MIND</small><h1>How Buddy is learning you</h1><p>Patterns are based on what you actually do. They can change as Buddy learns more.</p></div><div class="headerActions"><button>Last 30 days⌄</button><button class="primary" data-view="buddy">Ask Buddy</button></div></div>
+  <div class="mindDashboard">
+    <section class="mindOverview">
+      <div class="panelHead"><div><small>YOUR LEARNING MAP</small><h2>What we're discovering</h2></div><span class="statusPill">Still learning</span></div>
+      <div class="mindVisual"><div class="center"><span>T</span><b>Taz</b><small>5 areas observed</small></div><button class="node n1" data-detail="thinking"><b>Thinking</b><small>4 observations</small></button><button class="node n2" data-detail="confidence"><b>Confidence</b><small>3 observations</small></button><button class="node n3" data-detail="expression"><b>Expression</b><small>2 observations</small></button><button class="node n4" data-detail="independence"><b>Independence</b><small>4 observations</small></button><button class="node n5" data-detail="focus"><b>Focus</b><small>3 observations</small></button></div>
     </section>
+    <aside class="mindSide">
+      <section class="insightCard featured"><small>BUDDY CURRENTLY THINKS</small><h2 id="mindTitle">You may reason better when you find the clue first.</h2><p id="mindText">I've seen this more than once. I'm checking whether it also works in a different kind of task.</p><div class="evidenceRows"><div><span>Evidence</span><b id="mindEvidence">Tried 4 times · helped 3</b></div><div><span>Next test</span><b id="mindNext">A different inference question</b></div></div></section>
+      <section class="miniTrend"><div><small>INDEPENDENCE</small><b>Growing</b></div><div class="spark"><i></i><i></i><i></i><i></i><i></i></div><p>More attempts before asking for a hint.</p></section>
+    </aside>
+  </div>
+  <section class="discoveries"><div class="panelHead"><div><small>RECENT DISCOVERIES</small><h2>What changed</h2></div><button>View history →</button></div><div class="discoveryGrid"><article><span class="dot purple"></span><div><small>NOTICED</small><h3>Text clues before guessing</h3><p>You paused to find evidence in 3 of your last 4 tasks.</p></div></article><article><span class="dot green"></span><div><small>CHANGED</small><h3>Less hint dependence</h3><p>You tried independently first more often this week.</p></div></article><article><span class="dot blue"></span><div><small>CHECKING NEXT</small><h3>Transfer to a new passage</h3><p>Buddy will test the same skill with different wording.</p></div></article></div></section>
+</section>
 
-    <section class="view" id="buddy">
-      <div class="chatWrap"><div class="chatDragon"><video class="dragonVideo" autoplay muted loop playsinline aria-label="Dragon Buddy"><source src="https://dnznrvs05pmza.cloudfront.net/sam3_video_segmentation/6ae551c2-6a5e-44f9-a946-c83e9126c541/f9a75ad5-3973-490a-9661-3a6100b9d60d.webm?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiYzE0NTJlZWY4NDc4MjA0ZiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MDMyNTQ4N30.KOFfbEMtq33e5QvC29UNNBtIwEX5fdDCbtMNvzXSiR8" type="video/webm"></video><span>Buddy</span></div><div class="chat"><small>YOUR BUDDY</small><h1>What's on your mind, Taz?</h1><div class="bubble">You can ask me about school, show me something you're stuck on, or just tell me what isn't making sense.</div><div class="chips"><button>Test tomorrow 😭</button><button>I'm stuck</button><button>Challenge me</button><button>Explain this simply</button></div><div class="chatInput"><button>＋</button><input placeholder="Talk to Buddy..."><button>↑</button></div></div></div>
+<section class="view" id="buddy">
+  <div class="pageHeader"><div><small>BUDDY</small><h1>Your space with Buddy</h1><p>Ask, practise, think out loud, or bring Buddy something you're stuck on.</p></div><div class="headerActions"><span class="onlineDot">● Buddy is here</span></div></div>
+  <div class="buddyWorkspace">
+    <section class="buddyConversation">
+      <div class="conversationIntro"><small>START ANYWHERE</small><h2>What's on your mind, Taz?</h2><p>You don't need to know what to ask. Tell Buddy what happened or what feels difficult.</p></div>
+      <div class="starterGrid"><button>📚 <span><b>Help me understand</b><small>Explain something simply</small></span></button><button>🎯 <span><b>Challenge me</b><small>Give me something to try</small></span></button><button>🧠 <span><b>Think with me</b><small>Help me work it out</small></span></button><button>😵 <span><b>I'm stuck</b><small>Start from where I am</small></span></button></div>
+      <div class="buddyComposer"><button>＋</button><input placeholder="Talk to Buddy..."><button>↑</button></div>
+      <div class="recentBuddy"><div class="panelHead"><div><small>RECENT WITH BUDDY</small><h2>Pick up where you left off</h2></div></div><div><button><span>English</span><b>Reading between the lines</b><small>Yesterday · 12 min</small></button><button><span>Practice</span><b>Explaining my answer</b><small>2 days ago · 8 min</small></button></div></div>
     </section>
-  </main>
+    <aside class="buddyLiveStage"><div class="buddyStageText"><small>YOUR BUDDY</small><h2>I'm here.</h2><p>We can work on it together.</p></div><video class="dragonVideo" autoplay muted loop playsinline aria-label="Dragon Buddy"><source src="https://dnznrvs05pmza.cloudfront.net/sam3_video_segmentation/6ae551c2-6a5e-44f9-a946-c83e9126c541/f9a75ad5-3973-490a-9661-3a6100b9d60d.webm?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiYzE0NTJlZWY4NDc4MjA0ZiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MDMyNTQ4N30.KOFfbEMtq33e5QvC29UNNBtIwEX5fdDCbtMNvzXSiR8" type="video/webm"></video></aside>
+  </div>
+</section>
+</main>
 </div>
 <script src="app.js"></script>
 </body></html>
