@@ -21,25 +21,27 @@
     </header>
 
     <section class="view active" id="home">
-  <div class="hello"><div><small>GOOD AFTERNOON</small><h1>Hey Taz, what do you want to do?</h1><p>Buddy has something ready, or you can bring your own question.</p></div><button class="quiet" data-view="mind">View My Mind →</button></div>
-
-  <div class="topHomeGrid">
-  <article class="todayBuddy">
-    <div class="challengeCopy"><span class="pill">TODAY WITH BUDDY · ENGLISH</span><h2>Can you catch what the writer isn't saying?</h2><p>One short challenge to practise inference. Buddy will watch how you solve it, not just whether you get it right.</p><div class="focusInline"><span>✓ Implied meaning</span><span>✓ Find text clues</span><span>✓ Explain your thinking</span></div><div class="heroActions"><button class="primary" data-view="learning">Start challenge</button><button class="secondary" id="whyBtn">Why this?</button></div></div>
-    <div class="dragon"><video class="dragonVideo" autoplay muted loop playsinline aria-label="Dragon Buddy"><source src="https://dnznrvs05pmza.cloudfront.net/sam3_video_segmentation/6ae551c2-6a5e-44f9-a946-c83e9126c541/f9a75ad5-3973-490a-9661-3a6100b9d60d.webm?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiYzE0NTJlZWY4NDc4MjA0ZiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MDMyNTQ4N30.KOFfbEMtq33e5QvC29UNNBtIwEX5fdDCbtMNvzXSiR8" type="video/webm"></video></div>
-    <div class="buddyPrompt"><b>Buddy</b><span id="buddyLine">Want to try it without a hint first?</span><button id="hintBtn">Give me one clue</button></div>
-  </article>
-
-  <section class="groupCard dayGroup"><div class="groupTitle"><div><small>MY DAY</small><h2>Today's learning</h2></div><span>Small progress counts.</span></div><div class="dayMetrics"><div><b>28 min</b><span>Time learned</span></div><div><b>3</b><span>Tasks completed</span></div><div><b>4</b><span>Independent attempts</span></div><div><b>2</b><span>Hints used</span></div><div><b>75%</b><span>Accuracy</span></div></div></section>
-</div>
-
-<section class="groupCard intelligenceGroup"><div class="groupTitle"><div><small>WHAT BUDDY IS LEARNING ABOUT ME</small><h2>One connected intelligence story</h2></div><button data-view="mind">View My Mind →</button></div>
-    <div class="intelligenceFlow"><div class="flowItem"><span class="flowNo">1</span><small>BUDDY NOTICED</small><h3>You find the main idea, but can miss the writer's tone.</h3><p>Seen 4 times across reading tasks.</p><b>Still checking</b></div><span class="flowArrow">→</span><div class="flowItem"><span class="flowNo">2</span><small>WHAT CHANGED</small><h3>You're checking your evidence before submitting.</h3><p>Seen 3 times recently.</p><b>Positive change</b></div><span class="flowArrow">→</span><div class="flowItem"><span class="flowNo">3</span><small>NEXT CHECK</small><h3>Can you do the same thing in a different passage?</h3><p>Buddy will test transfer, not repeat the same question.</p><b>Planned today</b></div></div>
-  </section>
-
-  <section class="groupCard keepGroup"><div class="groupTitle"><div><small>KEEP GOING</small><h2>Choose your next step</h2></div><button data-view="learning">View learning →</button></div>
-    <div class="keepGrid"><button data-view="learning"><b>English comprehension</b><span>Find main ideas, clues and tone.</span><i>60%</i></button><button data-view="learning"><b>Writer's techniques</b><span>Spot how writers persuade and influence.</span><i>30%</i></button><button data-view="learning"><b>Practice questions</b><span>Build skill with exam-style questions.</span><i>20%</i></button><div class="askMini"><b>Ask Buddy</b><span>Homework, a word, or “I'm stuck”.</span><div><input id="homeAsk" placeholder="Ask anything..."><button id="sendAsk">↑</button></div></div></div>
-  </section>
+  <div class="homeWelcome"><div><small>GOOD AFTERNOON</small><h1>Hey Taz.</h1><p>Buddy has your next step ready.</p></div><button class="quiet" data-view="mind">View My Mind →</button></div>
+  <div class="homeWorkspace">
+    <div class="homeMain">
+      <article class="featureBuddy">
+        <div class="featureCopy"><span class="pill">TODAY WITH BUDDY · ENGLISH</span><h2>Can you catch what the writer isn't saying?</h2><p>Practise reading between the lines. Buddy will watch how you think, not only whether the answer is right.</p><div class="focusInline"><span>✓ Implied meaning</span><span>✓ Text clues</span><span>✓ Explain thinking</span></div><div class="heroActions"><button class="primary" data-view="learning">Start challenge</button><button class="secondary" id="whyBtn">Why this?</button></div></div>
+        <div class="featureDragon"><video class="dragonVideo" autoplay muted loop playsinline aria-label="Dragon Buddy"><source src="https://dnznrvs05pmza.cloudfront.net/sam3_video_segmentation/6ae551c2-6a5e-44f9-a946-c83e9126c541/f9a75ad5-3973-490a-9661-3a6100b9d60d.webm?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiYzE0NTJlZWY4NDc4MjA0ZiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MDMyNTQ4N30.KOFfbEMtq33e5QvC29UNNBtIwEX5fdDCbtMNvzXSiR8" type="video/webm"></video><div class="dragonSpeech">You've got this, Taz.</div></div>
+      </article>
+      <section class="continueArea"><div class="sectionHead"><div><small>KEEP GOING</small><h2>Continue learning</h2></div><button data-view="learning">View all →</button></div><div class="learningRail">
+        <button data-view="learning"><span class="tileIcon">Aa</span><div><b>English comprehension</b><small>Main ideas, clues & tone</small><i><em style="width:60%"></em></i></div><strong>60%</strong></button>
+        <button data-view="learning"><span class="tileIcon">“ ”</span><div><b>Writer's techniques</b><small>Persuasion & influence</small><i><em style="width:30%"></em></i></div><strong>30%</strong></button>
+        <button data-view="learning"><span class="tileIcon">?</span><div><b>Practice questions</b><small>Build exam confidence</small><i><em style="width:20%"></em></i></div><strong>20%</strong></button>
+      </div></section>
+      <section class="intelligenceStory"><div class="sectionHead"><div><small>YOUR INTELLIGENCE STORY</small><h2>What Buddy is learning about you</h2></div><button data-view="mind">Open My Mind →</button></div><div class="storyRow"><div><span>1</span><b>Noticed</b><p>You find the main idea, but sometimes miss tone.</p></div><div><span>2</span><b>Changed</b><p>You're checking evidence before submitting.</p></div><div><span>3</span><b>Next check</b><p>Try the same skill in a different passage.</p></div></div></section>
+    </div>
+    <aside class="homeRight">
+      <section class="rightCard"><small>MY DAY</small><h3>Today's learning</h3><div class="compactStats"><div><b>28</b><span>minutes</span></div><div><b>3</b><span>tasks</span></div><div><b>4</b><span>independent</span></div><div><b>2</b><span>hints</span></div></div></section>
+      <section class="rightCard buddyInsight"><small>BUDDY NOTICED</small><h3>You use clues better when you slow down first.</h3><p>Seen 4 times · still checking</p><button data-view="mind">Why Buddy thinks this →</button></section>
+      <section class="rightCard nextCard"><small>NEXT CHECK</small><h3>Can you transfer the skill?</h3><p>Buddy will use a different kind of passage next.</p><span>Planned today</span></section>
+      <section class="rightCard askCard"><small>QUICK ASK</small><h3>Ask Buddy anything</h3><div><input id="homeAsk" placeholder="I'm stuck with..."><button id="sendAsk">↑</button></div></section>
+    </aside>
+  </div>
 </section>
 
 <section class="view" id="learning">
