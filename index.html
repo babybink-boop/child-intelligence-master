@@ -47,14 +47,24 @@
 </section>
 
 <section class="view" id="learning">
-      <div class="workspaceTop"><button class="back" data-view="home">←</button><div><small>ENGLISH · INFERENCE</small><h1>What is Maya really feeling?</h1></div><span class="support" id="supportState">Buddy: quiet mode</span></div>
-      <div class="workspace">
-        <article class="task"><span class="step">01 / 03</span><blockquote>“I'm fine,” Maya says. She pushes her untouched lunch away and stares at the floor.</blockquote><h2>What is the strongest inference?</h2><div class="answers"><button>Happy</button><button data-correct="1">Upset</button><button>Bored</button><button>Not sure</button></div><div id="reason" class="reason hidden"><label>What gave it away?</label><textarea placeholder="Tell Buddy what clue you noticed..."></textarea><button class="primary" id="reasonDone">Continue</button></div></article>
-        <aside class="buddyPanel"><video class="dragonVideo" autoplay muted loop playsinline aria-label="Dragon Buddy"><source src="https://dnznrvs05pmza.cloudfront.net/sam3_video_segmentation/6ae551c2-6a5e-44f9-a946-c83e9126c541/f9a75ad5-3973-490a-9661-3a6100b9d60d.webm?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiYzE0NTJlZWY4NDc4MjA0ZiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MDMyNTQ4N30.KOFfbEMtq33e5QvC29UNNBtIwEX5fdDCbtMNvzXSiR8" type="video/webm"></video><small>DRAGON BUDDY</small><h3 id="coachTitle">I'm watching your approach.</h3><p id="coachText">I won't jump in unless you ask.</p><button id="helpBtn">Need me?</button></aside>
-      </div>
-    </section>
+  <div class="learnTop"><button class="back" data-view="home">←</button><div><small>ENGLISH · INFERENCE</small><h1>What is Maya really feeling?</h1></div><div class="learnProgress"><span>Question 1 of 3</span><i><em></em></i></div></div>
+  <div class="learningStage">
+    <article class="questionCard">
+      <div class="questionNo">01</div>
+      <small>READ THE CLUE</small>
+      <blockquote>“I'm fine,” Maya says. She pushes her untouched lunch away and stares at the floor.</blockquote>
+      <h2>What is the strongest inference?</h2>
+      <div class="answers"><button>Happy</button><button data-correct="1">Upset</button><button>Bored</button><button>Not sure</button></div>
+      <div id="reason" class="reason hidden"><label>What gave it away?</label><textarea placeholder="Tell Buddy what clue you noticed..."></textarea><button class="primary" id="reasonDone">Continue</button></div>
+    </article>
+    <aside class="learningBuddy">
+      <div class="learnBuddyWords"><small>BUDDY IS WITH YOU</small><h3 id="coachTitle">I'm watching your approach.</h3><p id="coachText">I won't jump in unless you ask.</p><button id="helpBtn">Give me one clue</button></div>
+      <video class="dragonVideo" autoplay muted loop playsinline aria-label="Dragon Buddy"><source src="https://dnznrvs05pmza.cloudfront.net/sam3_video_segmentation/6ae551c2-6a5e-44f9-a946-c83e9126c541/f9a75ad5-3973-490a-9661-3a6100b9d60d.webm?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiYzE0NTJlZWY4NDc4MjA0ZiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MDMyNTQ4N30.KOFfbEMtq33e5QvC29UNNBtIwEX5fdDCbtMNvzXSiR8" type="video/webm"></video>
+    </aside>
+  </div>
+</section>
 
-    <section class="view" id="mind">
+<section class="view" id="mind">
       <div class="mindHead"><small>MY MIND</small><h1>This is what Buddy is learning about you.</h1><p>Nothing here is permanent. Your real behaviour can change Buddy's mind.</p></div>
       <div class="mindGrid"><article class="constellation"><div class="center"><span>T</span><b>Taz</b><small>still discovering</small></div><button class="node n1" data-detail="thinking">Thinking<small>1 observation</small></button><button class="node n2" data-detail="confidence">Confidence<small>discovering</small></button><button class="node n3" data-detail="expression">Expression<small>discovering</small></button><button class="node n4" data-detail="independence">Independence<small>discovering</small></button><button class="node n5" data-detail="focus">Focus<small>discovering</small></button></article><aside class="mindDetail"><small>BUDDY CURRENTLY THINKS</small><h2 id="mindTitle">You may reason better when you find the clue first.</h2><p id="mindText">I've seen this once. I need to see it again in a different kind of task before I trust it.</p><div><b>Evidence</b><span id="mindEvidence">Tried 1 time · still checking</span></div><div><b>Next test</b><span id="mindNext">A different inference question</span></div></aside></div>
     </section>
