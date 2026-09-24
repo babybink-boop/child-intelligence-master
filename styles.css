@@ -41,3 +41,17 @@ body{font-size:15px;background:#f5f7f6}.side{width:190px}.app main{margin-left:2
 .heroScene:after{height:27%;background:linear-gradient(0deg,rgba(255,255,255,.62),rgba(255,255,255,0))}
 @media(max-width:1200px){.sceneCopy{width:60%;padding-left:32px}.challengeGlass h2{font-size:31px}.dragonStage{width:55%}.liveWords{left:3%}}
 @media(max-width:900px){.liveHero,.heroScene{min-height:780px}.sceneCopy{width:100%;padding:25px}.challengeGlass{width:100%}.dragonStage{top:390px;width:100%;height:410px;right:0;bottom:auto}.dragonStage .dragonVideo{height:112%;transform:scale(1.05)}.liveWords{left:10%;top:5%}}
+/* HERO SHAPE FIX V3 */
+/* Keep the full moving character visible and stop the hero from clipping/overscaling */
+.liveHero{min-height:560px;overflow:visible}
+.heroScene{min-height:560px;overflow:hidden;isolation:isolate}
+.sceneCopy{width:55%;padding:30px 38px;z-index:6}
+.challengeGlass{width:min(620px,100%);padding:23px 26px}
+.challengeGlass h2{font-size:33px;line-height:1.08}
+.dragonStage{position:absolute;z-index:3;right:0;top:0;bottom:0;width:52%;height:100%;display:flex;align-items:center;justify-content:center;overflow:visible}
+.dragonStage .dragonVideo{position:relative;width:100%;height:100%;max-width:720px;max-height:550px;object-fit:contain;object-position:center center;transform:none!important;right:auto!important;bottom:auto!important;filter:drop-shadow(0 24px 28px rgba(25,57,75,.16))}
+.liveWords{left:2%;top:22%;font-size:16px;max-width:175px;z-index:7}
+.heroScene:before{right:3%;bottom:3%;width:45%;height:12%}
+@media(max-width:1250px){.sceneCopy{width:58%;padding-left:30px}.dragonStage{width:48%}.challengeGlass h2{font-size:30px}.liveWords{left:0}}
+@media(max-width:950px){.liveHero,.heroScene{min-height:790px}.sceneCopy{width:100%;padding:25px}.dragonStage{top:390px;right:0;bottom:auto;width:100%;height:390px}.dragonStage .dragonVideo{max-height:390px;max-width:520px}.liveWords{left:12%;top:6%}}
+@media(max-width:600px){.liveHero,.heroScene{min-height:760px}.dragonStage{top:405px;height:340px}.dragonStage .dragonVideo{max-height:340px}.challengeGlass{padding:19px}.challengeGlass h2{font-size:26px}}
