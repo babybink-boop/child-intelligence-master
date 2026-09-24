@@ -118,3 +118,14 @@ body{font-size:16px}
 @media(max-width:1250px){.homeWorkspace{grid-template-columns:minmax(0,1fr) 300px}.featureCopy h2{font-size:38px}.featureDragon{width:49%}}
 @media(max-width:1100px){.homeWorkspace{grid-template-columns:1fr}.featureBuddy{min-height:460px}.homeRight{grid-template-columns:repeat(2,1fr)}.featureDragon{width:50%}}
 @media(max-width:750px){.homeWelcome h1{font-size:32px}.featureBuddy{min-height:670px;padding:24px}.featureCopy{width:100%}.featureCopy h2{font-size:32px}.featureDragon{top:310px;bottom:45px;width:100%;right:0}.featureDragon .dragonVideo{transform:scale(1.12)}.dragonSpeech{left:10%;top:12px}.homeRight{grid-template-columns:1fr}}
+
+/* Integrate Buddy into hero composition instead of floating beside it */
+.featureBuddy{display:grid;grid-template-columns:minmax(0,1fr) minmax(390px,.82fr);align-items:center;min-height:455px;padding:34px 36px;overflow:hidden}
+.featureCopy{width:auto;max-width:650px;padding-right:8px}
+.featureCopy h2{font-size:40px;max-width:610px}
+.featureDragon{position:relative;right:auto;top:auto;bottom:auto;width:100%;height:390px;align-self:stretch;display:flex;align-items:flex-end;justify-content:center}
+.featureDragon .dragonVideo{width:100%;height:100%;max-width:460px;max-height:410px;transform:scale(1.04);transform-origin:center bottom;object-fit:contain}
+.dragonSpeech{left:4%;top:16%;z-index:4;font-size:12px}
+@media(max-width:1250px){.featureBuddy{grid-template-columns:minmax(0,1fr) 40%;}.featureCopy h2{font-size:36px}.featureDragon{width:100%;height:360px}}
+@media(max-width:900px){.featureBuddy{grid-template-columns:1fr;min-height:690px;align-items:start}.featureCopy{width:100%;max-width:none}.featureDragon{height:310px;margin-top:8px}.featureDragon .dragonVideo{max-width:360px}.dragonSpeech{left:15%;top:8%}}
+@media(max-width:750px){.featureBuddy{display:flex;flex-direction:column;min-height:auto}.featureDragon{position:relative;top:auto;bottom:auto;right:auto;width:100%;height:300px}.featureDragon .dragonVideo{transform:scale(1);max-height:300px}}
