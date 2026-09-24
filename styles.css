@@ -129,3 +129,16 @@ body{font-size:16px}
 @media(max-width:1250px){.featureBuddy{grid-template-columns:minmax(0,1fr) 40%;}.featureCopy h2{font-size:36px}.featureDragon{width:100%;height:360px}}
 @media(max-width:900px){.featureBuddy{grid-template-columns:1fr;min-height:690px;align-items:start}.featureCopy{width:100%;max-width:none}.featureDragon{height:310px;margin-top:8px}.featureDragon .dragonVideo{max-width:360px}.dragonSpeech{left:15%;top:8%}}
 @media(max-width:750px){.featureBuddy{display:flex;flex-direction:column;min-height:auto}.featureDragon{position:relative;top:auto;bottom:auto;right:auto;width:100%;height:300px}.featureDragon .dragonVideo{transform:scale(1);max-height:300px}}
+
+/* Life-size interactive Buddy stage: character first, no speech-card UI */
+.featureBuddy{grid-template-columns:minmax(0,.92fr) minmax(500px,1.08fr);min-height:560px;padding:38px 40px;background:radial-gradient(circle at 78% 55%,rgba(255,255,255,.92) 0,rgba(239,246,241,.76) 28%,rgba(246,243,236,.75) 58%,rgba(238,245,240,.9) 100%)}
+.featureCopy{align-self:center;z-index:5}.featureCopy h2{font-size:42px}
+.featureDragon{height:520px;overflow:visible;position:relative;align-self:end}
+.featureDragon .dragonVideo{position:absolute;right:-4%;bottom:-9%;width:112%;height:112%;max-width:none;max-height:none;object-fit:contain;transform:none;transform-origin:center bottom;filter:drop-shadow(0 28px 32px rgba(30,48,37,.16));z-index:2}
+.dragonSpeech{display:none!important}
+.buddyVoice{position:absolute;z-index:5;left:0;top:13%;max-width:190px;font-size:17px;line-height:1.25;font-weight:750;color:#202521;transform:rotate(-3deg);text-shadow:0 2px 10px rgba(255,255,255,.95)}
+.buddyVoice:after{content:"";position:absolute;width:54px;height:2px;background:#77867d;right:-46px;bottom:-14px;transform:rotate(28deg);transform-origin:left center;opacity:.6}
+.buddyVoice span{font-size:13px;font-weight:500;color:#657069}
+@media(max-width:1250px){.featureBuddy{grid-template-columns:minmax(0,1fr) minmax(400px,.9fr);min-height:520px}.featureDragon{height:470px}.featureCopy h2{font-size:37px}}
+@media(max-width:900px){.featureBuddy{grid-template-columns:1fr;min-height:820px}.featureDragon{height:440px}.featureDragon .dragonVideo{right:0;bottom:-5%;width:100%;height:108%}.buddyVoice{left:12%;top:8%}}
+@media(max-width:750px){.featureBuddy{min-height:auto}.featureDragon{height:400px;margin-top:0}.featureDragon .dragonVideo{position:absolute;width:110%;height:110%;right:-5%;bottom:-5%}.buddyVoice{font-size:15px;left:4%;top:9%;max-width:150px}}
