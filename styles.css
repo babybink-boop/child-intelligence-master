@@ -151,3 +151,15 @@ body{font-size:16px}
 .storyRow{gap:10px}.storyRow>div{min-height:125px;border:1px solid #dfe4df;border-radius:5px;padding:14px;box-shadow:none;background:#fff}.storyRow>div:nth-child(1){border-top:3px solid #a78be5}.storyRow>div:nth-child(2){border-top:3px solid #72b694}.storyRow>div:nth-child(3){border-top:3px solid #79a9d8}.storyRow span{width:22px;height:22px;font-size:9px;border-radius:4px}.storyRow b{font-size:13px;margin:8px 0 4px}.storyRow p{font-size:11px}
 .homeRight{gap:12px}.rightCard{border:1px solid #dfe4df;border-radius:5px;padding:16px;box-shadow:none;background:#fff}.rightCard:first-child{background:#fff}.rightCard h3{font-size:15px;margin:6px 0}.rightCard p{font-size:11px}.compactStats{gap:7px}.compactStats>div{border:1px solid #e4e7e4;border-radius:4px;background:#f8f9f8;padding:10px}.compactStats b{font-size:20px}.compactStats span{font-size:9px}.buddyInsight{background:#f7f1ff;border-color:#ded1f2}.nextCard{background:#eef7ff;border-color:#d0e2f1}.askCard{background:#fff7e8;border-color:#eadcc2}.askCard>div{border-radius:4px}.askCard button{border-radius:3px}
 @media(max-width:750px){.learningRail>button{min-height:105px}.storyRow>div{min-height:105px}}
+
+/* Strong visual change for supporting modules */
+.continueArea,.intelligenceStory{border:1px solid #d9dfda!important;border-radius:6px!important;background:#fff!important;box-shadow:none!important;padding:18px!important}
+.learningRail{grid-template-columns:repeat(3,1fr)!important;gap:10px!important}
+.learningRail>button{min-height:170px!important;border-radius:4px!important;padding:16px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;box-shadow:none!important}
+.learningRail>button:nth-child(1){background:#eee8ff!important}.learningRail>button:nth-child(2){background:#fff0c7!important}.learningRail>button:nth-child(3){background:#dff3f4!important}
+.learningRail .tileIcon{width:36px!important;height:36px!important;border-radius:4px!important;margin-bottom:10px!important}
+.learningRail b{font-size:15px!important}.learningRail small{font-size:11px!important}.learningRail strong{margin-top:auto!important;align-self:flex-end!important}
+.storyRow{gap:10px!important}.storyRow>div{border-radius:4px!important;min-height:145px!important;padding:15px!important;box-shadow:none!important;background:#fff!important}
+.storyRow>div:nth-child(1){border:1px solid #d9d0ed!important;border-left:4px solid #9275d0!important}.storyRow>div:nth-child(2){border:1px solid #cfe4d8!important;border-left:4px solid #62a783!important}.storyRow>div:nth-child(3){border:1px solid #cfdfee!important;border-left:4px solid #6798c7!important}
+.rightCard{border-radius:5px!important;box-shadow:none!important}.compactStats>div{border-radius:3px!important}
+@media(min-width:1101px){.continueArea{margin-top:18px!important}.intelligenceStory{margin-top:12px!important}}
