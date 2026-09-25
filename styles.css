@@ -90,3 +90,21 @@ body{font-size:16px;line-height:1.45}
 .buddyLiveStage{position:relative;overflow:hidden;border:1px solid #dce6e3;border-radius:var(--ci-radius);background:radial-gradient(circle at 50% 35%,#e4f6ff,#edf7f2 54%,#f8f4ec);min-height:650px}.buddyLiveStage .dragonVideo{position:absolute;left:50%;bottom:-3%;transform:translateX(-50%);width:120%;height:78%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 25px 30px rgba(28,54,42,.16))}.buddyStageText{position:relative;z-index:4;padding:32px}.buddyStageText small{font-size:10px;font-weight:800;letter-spacing:1px;color:#6e7d76}.buddyStageText h2{font-size:28px;margin:7px 0}.buddyStageText p{font-size:14px;color:#66756d}
 @media(max-width:1100px){.mindDashboard,.buddyWorkspace{grid-template-columns:1fr}.mindSide{display:grid;grid-template-columns:1fr 1fr}.buddyLiveStage{min-height:480px}.buddyLiveStage .dragonVideo{width:80%;height:95%;left:70%}.buddyStageText{max-width:42%}}
 @media(max-width:760px){.view:not(#home){padding:15px}.pageHeader{align-items:flex-start;flex-direction:column}.pageHeader h1{font-size:27px}.headerActions{width:100%}.mindSide,.discoveryGrid,.starterGrid,.recentBuddy>div+div{grid-template-columns:1fr}.mindVisual{min-height:500px}.mindVisual .node{min-width:125px}.buddyLiveStage{min-height:500px}.buddyStageText{max-width:100%}.buddyLiveStage .dragonVideo{left:50%;width:105%;height:70%}}
+
+
+/* DESKTOP ONE-SCREEN HOME + DRAGON FALLBACK */
+@media (min-width:1100px) and (min-height:720px){
+ body{overflow:hidden} main{height:100vh;overflow:hidden}
+ .top{height:64px;padding-top:8px;padding-bottom:8px}
+ #home.view.active{height:calc(100vh - 64px);overflow:hidden;display:grid;grid-template-rows:minmax(0,1.35fr) minmax(220px,.65fr);gap:12px}
+ .liveHero,.heroScene{min-height:0;height:100%}.heroScene{padding:22px 34px}
+ .sceneCopy>h1{font-size:42px;margin:8px 0}.sceneCopy>p{margin:0 0 12px}
+ .challengeGlass{padding:20px 24px;max-width:650px}.challengeGlass h2{font-size:29px;line-height:1.08;margin:9px 0}.challengeGlass p{margin:8px 0 12px}
+ .dragonStage{min-height:0;overflow:visible}.dragonStage .dragonVideo{max-height:380px;width:min(430px,100%);object-fit:contain}
+ .liveDashboard{min-height:0;overflow:hidden;gap:12px}.learningPanel{padding:14px 18px}.panelHead{margin-bottom:8px}.panelHead h2{font-size:19px;margin:2px 0}.panelHead p{font-size:10px;margin:2px 0}
+ .courseCards{gap:9px}.course{padding:12px;min-height:108px}.course h3{font-size:16px;line-height:1.05;margin:5px 0}.course p{font-size:9px;margin:2px 0}.course i{margin:7px 0}
+ .mindStrip{display:none}.liveRail{display:grid;grid-template-columns:1fr 1fr;gap:8px}.railCard{padding:11px}.railCard.quick{display:none}.dayFour{grid-template-columns:1fr 1fr;gap:5px}.dayFour>div{padding:7px}.railCard h3{font-size:13px;margin:4px 0}.railCard p{font-size:9px;margin:2px 0}
+}
+.dragonStage{position:relative}
+.dragonStage:before{content:"🐉";position:absolute;inset:4% 2% 8%;display:flex;align-items:center;justify-content:center;font-size:clamp(150px,22vw,330px);filter:drop-shadow(0 22px 22px rgba(32,60,64,.14));opacity:.9;z-index:0}
+.dragonStage .dragonVideo{position:relative;z-index:1}.dragonStage .liveWords{position:relative;z-index:2}
