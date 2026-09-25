@@ -260,3 +260,38 @@ function ciSliceSubmit(answer,evidence){
  return {correct:correct,buddy:correct?"Good. Which clue proved it?":diagnosis.message,next:ciSliceTask(),stage:s.stage,support:s.support};
 }
 window.ChildIntelligenceVerticalSlice={model:ciSgInference,state:ciSlice,task:ciSliceTask,submit:ciSliceSubmit};
+
+
+/* Question Intelligence V1: curriculum + assessment-pattern aware selection */
+const CI_QUESTION_INTELLIGENCE={
+ version:"1.0",
+ sources:[
+  {id:"moe",kind:"official-curriculum",use:"Defines learning outcomes and progression; never copied as practice content."},
+  {id:"seab",kind:"official-assessment",use:"Defines assessment demands and formats."},
+  {id:"tuitionwithjason",kind:"school-paper-reference",use:"Reference patterns for lower-secondary Maths."},
+  {id:"testpapersfree",kind:"school-paper-reference",use:"Reference school/year/subject/assessment variation."},
+  {id:"freetestpaper",kind:"school-paper-reference",use:"Reference cross-level and historical assessment variation."},
+  {id:"secondaryexampapers",kind:"school-paper-reference",use:"Reference lower-secondary English school-paper patterns."}
+ ],
+ purposes:["diagnose","repair","confirm","transfer","exam","retention","challenge"],
+ dimensions:["skill","subskill","text_or_problem_type","question_form","reasoning_demand","evidence_demand","language_load","steps","novelty","support_allowed"],
+ rule:"Use source papers as assessment-pattern evidence. Prefer fresh questions; do not treat a paper's wording as the learner task unless separately licensed/allowed."
+};
+function ciQuestionSpec(input){
+ const s=ciSlice(),e=ciEngineState(),purpose=input&&input.purpose||s.stage||"diagnose";
+ const support=purpose==="repair"?Math.max(1,s.support||1):0;
+ const novelty=purpose==="repair"?"same-context":purpose==="confirm"?"new-item-same-skill":purpose==="transfer"?"new-context":purpose==="exam"?"school-assessment-style":purpose==="retention"?"delayed-new-item":"adaptive";
+ return {
+  country:"Singapore",level:(input&&input.level)||"Secondary 2",subject:(input&&input.subject)||"English",
+  skill:(input&&input.skill)||"inferential comprehension",purpose:purpose,
+  constraints:{supportAllowed:purpose==="repair",supportLevel:support,novelty:novelty,requireEvidence:["confirm","transfer","exam","retention"].includes(purpose)},
+  learner:{topCause:e.lastCause||null,friction:e.friction||"green",independence:e.support===0?"independent":"supported"},
+  assessmentReference:{curriculum:"MOE",assessment:"SEAB",schoolPaperPatterns:["tuitionwithjason","testpapersfree","freetestpaper","secondaryexampapers"]},
+  nextRule:"Choose the smallest change that tests the current hypothesis; do not increase difficulty and change skill at the same time."
+ };
+}
+function ciNextQuestionPlan(){
+ const spec=ciQuestionSpec({}); const task=ciSliceTask();
+ return {spec:spec,current:task,decision:ciNextDecision(),why:"Selected from curriculum demand + current evidence + assessment pattern + support/challenge state."};
+}
+window.ChildIntelligenceQuestionIntelligence={model:CI_QUESTION_INTELLIGENCE,spec:ciQuestionSpec,next:ciNextQuestionPlan};
