@@ -11,3 +11,58 @@ document.querySelectorAll("[data-detail]").forEach(b=>b.addEventListener("click"
 function ask(){const i=document.getElementById("homeAsk");if(!i.value.trim())return;show("buddy");const ci=document.querySelector(".chatInput input");ci.value=i.value;i.value="";ci.focus()}
 document.getElementById("sendAsk")?.addEventListener("click",ask);document.getElementById("homeAsk")?.addEventListener("keydown",e=>{if(e.key==="Enter")ask()});
 show("home");
+
+/* CHILD INTELLIGENCE: adaptive support + challenge + global transfer */
+const CI_CHALLENGE={
+  support:["Independent","Prompt","Clue","Strategy","Partial teaching","Full teaching"],
+  challenge:["Current level","Deeper thinking","Higher year/grade","High-ability challenge","Country challenge","Cross-system challenge"],
+  homeCurriculum:"Singapore MOE",
+  rule:"Home curriculum stays the anchor. Challenge results are evidence, not a new school-level label."
+};
+function ciChallengeState(){
+  try{return JSON.parse(localStorage.getItem("ciChallengeState"))||{skill:"English inference",support:0,challenge:0,friction:"green",evidence:[],country:null}}
+  catch(e){return {skill:"English inference",support:0,challenge:0,friction:"green",evidence:[],country:null}}
+}
+function ciSaveChallenge(s){localStorage.setItem("ciChallengeState",JSON.stringify(s))}
+function ciReadiness(s){
+  const recent=s.evidence.slice(-5);
+  if(recent.length<3)return false;
+  const independent=recent.filter(x=>x.correct&&x.support===0).length;
+  const transfer=recent.some(x=>x.transfer);
+  return independent>=3&&transfer;
+}
+function ciRecordChallenge(result){
+  const s=ciChallengeState();
+  s.evidence.push({time:new Date().toISOString(),correct:!!result.correct,support:result.support||0,transfer:!!result.transfer,retained:!!result.retained,country:result.country||null,challenge:s.challenge});
+  if(result.friction)s.friction=result.friction;
+  if(ciReadiness(s)&&s.friction!=="red")s.challenge=Math.min(5,s.challenge+1);
+  if(s.friction==="red")s.support=Math.min(5,s.support+1);
+  else if(result.correct&&s.support>0)s.support--;
+  ciSaveChallenge(s);return s;
+}
+function ciChooseChallenge(mode,country){
+  const s=ciChallengeState();
+  const map={deeper:1,higher:2,advanced:3,country:4,global:5};
+  s.challenge=map[mode]??s.challenge;
+  s.country=mode==="country"?country:null;
+  s.support=0;
+  ciSaveChallenge(s);
+  return {
+    skill:s.skill,
+    homeCurriculum:CI_CHALLENGE.homeCurriculum,
+    challenge:CI_CHALLENGE.challenge[s.challenge],
+    country:s.country,
+    instruction:s.challenge===4
+      ?"Create a comparable "+country+" curriculum-aligned task for the same underlying skill; do not claim the learner is at that country's school level."
+      :s.challenge===5
+      ?"Create an unfamiliar cross-system task that tests transfer, evidence use and reasoning without Buddy help."
+      :"Increase reasoning demand while preserving the target skill."
+  };
+}
+function ciChallengeOffer(){
+  const s=ciChallengeState();
+  return ciReadiness(s)
+    ?"You’re handling this independently. Want a harder one?"
+    :"Let’s build a little more evidence before Buddy raises the level automatically.";
+}
+window.ChildIntelligenceChallenge={config:CI_CHALLENGE,state:ciChallengeState,record:ciRecordChallenge,choose:ciChooseChallenge,offer:ciChallengeOffer};
