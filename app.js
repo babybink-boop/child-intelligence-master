@@ -295,3 +295,40 @@ function ciNextQuestionPlan(){
  return {spec:spec,current:task,decision:ciNextDecision(),why:"Selected from curriculum demand + current evidence + assessment pattern + support/challenge state."};
 }
 window.ChildIntelligenceQuestionIntelligence={model:CI_QUESTION_INTELLIGENCE,spec:ciQuestionSpec,next:ciNextQuestionPlan};
+
+
+/* Connect the visible Learning tab to the vertical-slice engine. */
+(function(){
+ const root=document.getElementById("learning"); if(!root)return;
+ const title=root.querySelector(".learnTop h1"),meta=root.querySelector(".learnTop small"),progress=root.querySelector(".learnProgress span");
+ const quote=root.querySelector(".questionCard blockquote"),question=root.querySelector(".questionCard h2"),num=root.querySelector(".questionNo");
+ const answers=root.querySelector(".answers"),reason=root.querySelector("#reason"),reasonText=reason&&reason.querySelector("textarea");
+ const coachTitle=root.querySelector("#coachTitle"),coachText=root.querySelector("#coachText"),help=root.querySelector("#helpBtn"),done=root.querySelector("#reasonDone");
+ const choices={
+  repair:["Happy","Upset","Bored","Not sure"],
+  confirm:["Excited","Upset","Amused","Relaxed"],
+  transfer:["She is hiding disappointment","She is proud of the letter","She has forgotten about it","She finds it funny"]
+ };
+ function stageIndex(stage){return ["repair","confirm","transfer","exam","retention"].indexOf(stage)+1}
+ function render(){
+  const t=ciSliceTask(),s=ciSlice(),i=stageIndex(t.stage);
+  meta.textContent="ENGLISH · INFERENCE · "+t.stage.toUpperCase(); title.textContent=t.question; progress.textContent="Step "+i+" of 5"; num.textContent=String(i).padStart(2,"0"); quote.textContent=t.text; question.textContent=t.question;
+  reason.classList.add("hidden"); if(reasonText)reasonText.value="";
+  answers.innerHTML="";
+  (choices[t.stage]||[]).forEach(label=>{const b=document.createElement("button");b.textContent=label;b.addEventListener("click",()=>answer(label));answers.appendChild(b)});
+  if(!choices[t.stage]){const input=document.createElement("textarea");input.id="ciOpenAnswer";input.placeholder="Write your answer and include a clue from the text...";input.style.cssText="width:100%;min-height:110px;padding:14px;border:1px solid #dfe5e1;border-radius:10px;font:inherit";answers.appendChild(input);const b=document.createElement("button");b.textContent="Check my answer";b.className="primary";b.addEventListener("click",()=>answer(input.value));answers.appendChild(b)}
+  coachTitle.textContent=t.stage==="repair"?"Try it your way first.":t.stage==="confirm"?"Can you do it on a new question?":t.stage==="transfer"?"Now use the skill in a different situation.":t.stage==="exam"?"School-style check. No hints this time.":"One more check to see if it stayed with you.";
+  coachText.textContent=t.stage==="repair"?"I won't jump in unless you ask.":"I'm checking what you can do independently.";
+  help.style.display=t.stage==="repair"?"inline-block":"none";
+ }
+ function answer(value){
+  const t=ciSliceTask(); let evidence="";
+  if(t.stage==="exam"||t.stage==="retention"){evidence=value}
+  const out=ciSliceSubmit(value,evidence);
+  if(out.correct){coachTitle.textContent="Yes — now prove it.";coachText.textContent=out.buddy;reason.classList.remove("hidden");reason.dataset.next="1"}
+  else{coachTitle.textContent="Not yet.";coachText.textContent=out.buddy||"Look for the strongest clue before deciding.";reason.classList.add("hidden")}
+ }
+ help.addEventListener("click",()=>{const s=ciSlice();s.support=Math.min(5,s.support+1);ciSliceSave(s);const t=ciSliceTask();coachTitle.textContent="One clue only.";coachText.textContent="Look closely at: “"+t.clue+"”. What does that behaviour suggest?"});
+ done.addEventListener("click",()=>{const text=reasonText.value.trim();ciAddEvidence({layer:"Observed",skill:"inferential comprehension",stage:ciSlice().stage,type:"reasoning explanation",evidence:text});render()});
+ render();
+})();
