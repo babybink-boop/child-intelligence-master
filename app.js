@@ -66,3 +66,103 @@ function ciChallengeOffer(){
     :"Let’s build a little more evidence before Buddy raises the level automatically.";
 }
 window.ChildIntelligenceChallenge={config:CI_CHALLENGE,state:ciChallengeState,record:ciRecordChallenge,choose:ciChooseChallenge,offer:ciChallengeOffer};
+
+
+/* COMPLETE LEARNING LOOP V1
+   Attempt -> diagnose -> minimum useful help -> same-question repair ->
+   new-question confirmation -> transfer -> exam -> retention -> challenge.
+*/
+const CI_ENGINE={
+  stages:["repair","confirm","transfer","exam","retention"],
+  lifecycle:["Predicted","Emerging","Observed","Tested","Established","Contradicted"],
+  causes:["vocabulary","question_interpretation","evidence_detection","evidence_connection","reasoning","expression","rushing","attention","confidence","knowledge_gap","strategy_gap","dependency"],
+  evidenceLayers:["Predicted","Reported","Observed","Tested","Established"],
+  principle:"Observed behaviour overrides predicted profile."
+};
+function ciEngineState(){
+  try{return JSON.parse(localStorage.getItem("ciEngineState"))||{
+    skill:"English comprehension · inference",stage:"repair",support:0,friction:"green",
+    hypotheses:{},attempts:[],independentSuccesses:0,transferSuccesses:0,retentionSuccesses:0,
+    profile:{metaphysics:"starting hypothesis",psychometric:"starting hypothesis"},
+    nextAction:"independent_attempt"
+  }}catch(e){return null}
+}
+function ciSaveEngine(s){localStorage.setItem("ciEngineState",JSON.stringify(s))}
+function ciTopCause(h){
+  const keys=Object.keys(h);if(!keys.length)return "reasoning";
+  return keys.sort((a,b)=>h[b]-h[a])[0];
+}
+function ciObserveAttempt(x){
+  let s=ciEngineState(),h=s.hypotheses;
+  if(!x.correct){
+    if(x.responseMs!=null&&x.responseMs<4000&&!x.reread)h.rushing=(h.rushing||0)+2;
+    if(!x.evidenceSelected)h.evidence_detection=(h.evidence_detection||0)+1;
+    if(x.evidenceSelected&&x.evidenceRelevant)h.evidence_connection=(h.evidence_connection||0)+1;
+    if(x.asksWordMeaning)h.vocabulary=(h.vocabulary||0)+2;
+    if(x.changedCorrectAnswer)h.confidence=(h.confidence||0)+1;
+    if(x.repeatedHintUse)h.dependency=(h.dependency||0)+1;
+  }
+  const recent=s.attempts.slice(-2), repeated=recent.filter(a=>!a.correct).length>=2;
+  s.friction=(x.abandoned||x.randomGuess)?"red":(repeated||x.helpRequested||((x.responseMs||99999)<4000))?"amber":"green";
+  const cause=ciTopCause(h);
+  if(x.correct){s.support=0;s.nextAction="explain_reasoning";}
+  else if(s.friction==="red"){s.support=Math.max(s.support,3);s.nextAction="teach_then_retry";}
+  else {s.support=Math.max(s.support,1);s.nextAction="minimum_help_then_retry_same";}
+  s.attempts.push({time:new Date().toISOString(),stage:s.stage,correct:!!x.correct,cause:cause,support:s.support,friction:s.friction});
+  ciSaveEngine(s);return {state:s,cause:cause,message:ciHelpFor(cause,s.friction)};
+}
+function ciHelpFor(cause,friction){
+  if(friction==="red")return "I’ll teach the missing piece, then you can try again.";
+  return ({
+    vocabulary:"Which word is unclear? I’ll explain only that part.",
+    question_interpretation:"What is the question really asking you to find?",
+    evidence_detection:"Show me one thing the character does that gives you a clue.",
+    evidence_connection:"You found the clue. What might that behaviour tell us?",
+    reasoning:"What does the evidence suggest?",
+    expression:"You have the idea. Finish: ‘I think ___ because ___.’",
+    rushing:"Before choosing, find one clue that supports your answer.",
+    attention:"Read just the key sentence once more.",
+    confidence:"Keep your answer for now. Show me why you chose it.",
+    knowledge_gap:"Let me teach this one missing idea first.",
+    strategy_gap:"Try this: find one clue before deciding.",
+    dependency:"You try first. I’ll stay quiet unless you ask."
+  })[cause]||"Show me what made you choose that answer.";
+}
+function ciAdvance(result){
+  let s=ciEngineState();
+  if(s.stage==="repair"&&result.correctAfterSupport){s.stage="confirm";s.support=0;s.nextAction="different_question_same_skill";}
+  else if(s.stage==="confirm"&&result.correctIndependent){s.stage="transfer";s.independentSuccesses++;s.nextAction="different_context_different_phrasing";}
+  else if(s.stage==="transfer"&&result.correctIndependent){s.stage="exam";s.transferSuccesses++;s.nextAction="singapore_exam_style_no_help";}
+  else if(s.stage==="exam"&&result.correctIndependent){s.stage="retention";s.independentSuccesses++;s.nextAction="delayed_retest_no_help";}
+  else if(s.stage==="retention"&&result.correctIndependent){s.retentionSuccesses++;s.nextAction="consider_challenge_ladder";}
+  ciSaveEngine(s);return s;
+}
+function ciMastery(){
+  const s=ciEngineState();
+  return {established:s.transferSuccesses>0&&s.retentionSuccesses>0&&s.independentSuccesses>1,
+    reason:"Mastery requires independent transfer and later retention; correcting the original item is not enough."};
+}
+window.ChildIntelligenceEngine={config:CI_ENGINE,state:ciEngineState,observe:ciObserveAttempt,advance:ciAdvance,mastery:ciMastery};
+
+/* Challenge chooser UI wiring: learner can opt in even before automatic readiness. */
+function ciOpenChallengeMenu(){
+  const host=document.querySelector(".starterGrid"); if(!host)return;
+  let panel=document.getElementById("challengeMenu");
+  if(!panel){panel=document.createElement("div");panel.id="challengeMenu";panel.className="challengeMenu";
+    panel.innerHTML='<b>How do you want to be challenged?</b><button data-ci-challenge="deeper">Go Deeper</button><button data-ci-challenge="higher">Go Higher</button><button data-ci-challenge="advanced">High-Ability Challenge</button><button data-ci-challenge="country">Go Global · Country</button><button data-ci-challenge="global">Global Boss</button><div id="countryChoices" hidden><button data-country="United Kingdom">UK</button><button data-country="United States">US</button><button data-country="Australia">Australia</button></div><p id="challengeMessage"></p>';
+    host.after(panel);
+    panel.querySelectorAll("[data-ci-challenge]").forEach(b=>b.onclick=()=>{
+      if(b.dataset.ciChallenge==="country"){document.getElementById("countryChoices").hidden=false;return}
+      const plan=ciChooseChallenge(b.dataset.ciChallenge);document.getElementById("challengeMessage").textContent=plan.challenge+" · "+plan.instruction;
+    });
+    panel.querySelectorAll("[data-country]").forEach(b=>b.onclick=()=>{const plan=ciChooseChallenge("country",b.dataset.country);document.getElementById("challengeMessage").textContent=plan.country+" challenge · same skill, different curriculum context.";});
+  }
+  panel.hidden=!panel.hidden;
+}
+document.querySelectorAll(".starterGrid button").forEach(b=>{if((b.textContent||"").includes("Challenge me"))b.addEventListener("click",ciOpenChallengeMenu)});
+
+/* Fix old redesigned Help handler's removed element safely. */
+if(!document.getElementById("supportState")){
+  const coach=document.querySelector(".learnBuddyWords");
+  if(coach){const s=document.createElement("small");s.id="supportState";s.textContent="Buddy: independent";coach.prepend(s);}
+}
