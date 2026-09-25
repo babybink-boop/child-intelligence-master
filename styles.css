@@ -108,3 +108,14 @@ body{font-size:16px;line-height:1.45}
 .dragonStage{position:relative}
 .dragonStage:before{content:"🐉";position:absolute;inset:4% 2% 8%;display:flex;align-items:center;justify-content:center;font-size:clamp(150px,22vw,330px);filter:drop-shadow(0 22px 22px rgba(32,60,64,.14));opacity:.9;z-index:0}
 .dragonStage .dragonVideo{position:relative;z-index:1}.dragonStage .liveWords{position:relative;z-index:2}
+
+/* HOME SIMPLIFY V6 — one-screen learner home */
+@media (min-width:1100px){
+ #home.view.active{padding-bottom:0}
+ #home .liveHero{min-height:0}
+ #home .liveDashboard{grid-template-columns:minmax(0,1fr) 300px}
+ #home .learningPanel{overflow:hidden}
+ #home .courseCards{grid-template-columns:repeat(3,1fr)}
+ #home .liveRail{display:block}
+ #home .railCard{height:100%}
+}
