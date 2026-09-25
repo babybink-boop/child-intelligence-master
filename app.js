@@ -166,3 +166,72 @@ if(!document.getElementById("supportState")){
   const coach=document.querySelector(".learnBuddyWords");
   if(coach){const s=document.createElement("small");s.id="supportState";s.textContent="Buddy: independent";coach.prepend(s);}
 }
+
+
+/* CHILD INTELLIGENCE COMPLETE PROCESS MODEL V1 */
+const CI_PROCESS={
+ learner:{name:"Taz",age:14,home:{country:"Singapore",system:"MOE",stage:"Secondary 2"},subject:"English"},
+ sources:{
+  metaphysics:{kind:"Predicted",purpose:"Generate starting hypotheses; never treated as observed fact."},
+  psychometric:{kind:"Reported/Assessed",purpose:"Structured hypotheses about behaviour, confidence and learning."},
+  child:{kind:"Reported",purpose:"Learner self-perception and preferences."},
+  parent:{kind:"Reported",purpose:"Home observations and changes over time."},
+  teacher:{kind:"Reported",purpose:"School observations and classroom performance."},
+  behaviour:{kind:"Observed",purpose:"What the learner actually does during learning."}
+ },
+ domains:["Understanding & Thinking","Knowledge & Skills","Learning Behaviour","Attention & Engagement","Confidence & Emotion","Learning Strategies & Independence"],
+ flow:["know_child","map_curriculum","task","observe","diagnose","friction","support","repair","confirm","transfer","exam","retention","independence","challenge","global_challenge","update_intelligence","role_outputs","next_test"],
+ curriculum:{anchor:"Singapore MOE",rule:"Personalise how the learner reaches the target, not the target itself.",globalRule:"Other systems are challenge/transfer evidence, not replacement school-level labels."},
+ challengeCountries:["United Kingdom","United States","Australia"],
+ mastery:{requires:["independent performance","new-context transfer","delayed retention"],notEnough:["correct after hint","corrected same question"]},
+ independence:{goal:"Learner can select and use a useful strategy without Buddy.",supportFade:[5,4,3,2,1,0]}
+};
+function ciStore(k,fallback){try{return JSON.parse(localStorage.getItem(k))||fallback}catch(e){return fallback}}
+function ciEvidence(){return ciStore("ciEvidenceV3",[])}
+function ciFindings(){return ciStore("ciFindingsV3",[])}
+function ciSave(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function ciAddEvidence(e){
+ const list=ciEvidence();list.push(Object.assign({id:"ev_"+Date.now(),time:new Date().toISOString(),layer:"Observed"},e));ciSave("ciEvidenceV3",list);return list[list.length-1];
+}
+function ciFindingStatus(r){
+ const n=r.tests||0,h=r.helped||0;
+ if(!n)return "Predicted"; if(n<3)return "Emerging";
+ if(h===0&&(r.didNotHelp||0)>=2)return "Contradicted";
+ if(h>=2&&!(r.retention||0))return "Observed";
+ if(h>=2&&(r.retention||0)&&(r.transfer||0)&&(r.independent||0))return "Established";
+ return "Tested";
+}
+function ciUpdateFinding(input){
+ let rs=ciFindings(),r=rs.find(x=>x.id===input.id);
+ if(!r){r={id:input.id,domain:input.domain,finding:input.finding,sources:input.sources||[],tests:0,helped:0,didNotHelp:0,retention:0,transfer:0,independent:0,status:"Predicted"};rs.push(r)}
+ if(input.outcome){r.tests++;input.outcome.helped?r.helped++:r.didNotHelp++;if(input.outcome.retained)r.retention++;if(input.outcome.transferred)r.transfer++;if(input.outcome.independent)r.independent++}
+ r.status=ciFindingStatus(r);r.updatedAt=new Date().toISOString();ciSave("ciFindingsV3",rs);return r;
+}
+function ciRoleOutput(role){
+ const findings=ciFindings(),established=findings.filter(x=>x.status==="Established"),testing=findings.filter(x=>x.status!=="Established"&&x.status!=="Contradicted");
+ if(role==="child")return {title:"What Buddy is learning about me",known:established.map(x=>x.finding),checking:testing.map(x=>x.finding),goal:"Know what to do when I get stuck."};
+ if(role==="parent")return {title:"What changed and did it work?",evidence:findings.map(x=>({finding:x.finding,status:x.status,tried:x.tests,helped:x.helped,independent:x.independent})),next:"Buddy will keep testing whether useful strategies last and transfer."};
+ if(role==="teacher")return {title:"Recommended Teaching Approach",actions:established.map(x=>x.finding),checking:testing.map(x=>x.finding),rule:"Use the smallest useful support, then return control to the learner."};
+ return {title:"Intelligence Lab",sources:CI_PROCESS.sources,findings,evidence:ciEvidence(),flow:CI_PROCESS.flow};
+}
+function ciNextDecision(){
+ const learn=ciEngineState(),challenge=ciChallengeState(),mastery=ciMastery();
+ if(learn.friction==="red")return {action:"teach_or_reframe",why:"Struggle is no longer productive."};
+ if(learn.friction==="amber")return {action:"minimum_useful_support",why:"Friction is rising."};
+ if(mastery.established&&ciReadiness(challenge))return {action:"challenge",why:"Independent transfer and retention support a stretch task."};
+ return {action:learn.nextAction||"independent_attempt",why:"Continue gathering evidence."};
+}
+window.ChildIntelligence={
+ process:CI_PROCESS,
+ evidence:{all:ciEvidence,add:ciAddEvidence},
+ findings:{all:ciFindings,update:ciUpdateFinding},
+ roles:ciRoleOutput,
+ next:ciNextDecision,
+ learning:window.ChildIntelligenceEngine,
+ challenge:window.ChildIntelligenceChallenge
+};
+
+/* Capture the live inference interaction into the shared evidence layer. */
+document.querySelectorAll(".answers button").forEach(btn=>btn.addEventListener("click",()=>{
+ ciAddEvidence({task:"English inference",skill:"inferential comprehension",answer:btn.textContent.trim(),correct:btn.dataset.correct==="1",support:ciEngineState().support,stage:ciEngineState().stage,source:"learner behaviour"});
+}));
