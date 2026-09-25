@@ -235,3 +235,28 @@ window.ChildIntelligence={
 document.querySelectorAll(".answers button").forEach(btn=>btn.addEventListener("click",()=>{
  ciAddEvidence({task:"English inference",skill:"inferential comprehension",answer:btn.textContent.trim(),correct:btn.dataset.correct==="1",support:ciEngineState().support,stage:ciEngineState().stage,source:"learner behaviour"});
 }));
+
+
+/* Singapore English inference vertical slice */
+const ciSgInference={
+ curriculum:{country:"Singapore",system:"MOE",stage:"Secondary 2",subject:"English",skill:"Inferential comprehension"},
+ tasks:[
+  {stage:"repair",text:"Maya says she is fine. She pushes her untouched lunch away and stares at the floor.",question:"What is Maya most likely feeling?",answer:"upset",clue:"stares at the floor"},
+  {stage:"confirm",text:"Daniel enters class without speaking, drops his bag and avoids looking at his friends.",question:"What is Daniel most likely feeling?",answer:"upset",clue:"avoids looking at his friends"},
+  {stage:"transfer",text:"Sarah says not to worry, forces a smile and folds a rejection letter into her bag.",question:"What does Sarah's behaviour suggest?",answer:"disappointment",clue:"forces a smile"},
+  {stage:"exam",text:"Arun reads a message twice, types a reply, deletes it and puts his phone down without sending.",question:"What can you infer about Arun? Use evidence.",answer:"hesitant",clue:"deletes it"},
+  {stage:"retention",text:"Mei pauses outside a room, hears applause, breathes slowly and then enters.",question:"What can you infer about Mei before she enters?",answer:"nervous",clue:"breathes slowly"}
+ ]};
+function ciSlice(){return ciStore("ciSlice",{stage:"repair",support:0,started:Date.now(),history:[]})}
+function ciSliceSave(s){ciSave("ciSlice",s);return s}
+function ciSliceTask(){let s=ciSlice();return ciSgInference.tasks.find(x=>x.stage===s.stage)||ciSgInference.tasks[0]}
+function ciSliceSubmit(answer,evidence){
+ let s=ciSlice(),t=ciSliceTask(),a=String(answer||"").toLowerCase(),correct=a.includes(t.answer);
+ let diagnosis=ciObserveAttempt({correct:correct,responseMs:Date.now()-s.started,evidenceSelected:!!evidence,evidenceRelevant:String(evidence||"").toLowerCase().includes(t.clue),helpRequested:s.support>0});
+ ciAddEvidence({layer:"Observed",skill:"inferential comprehension",stage:s.stage,correct:correct,evidence:evidence||"",diagnosis:diagnosis.cause,support:s.support});
+ if(correct){if(s.stage==="repair")ciAdvance({correctAfterSupport:true});else ciAdvance({correctIndependent:s.support===0});s.stage=ciEngineState().stage;s.support=0}
+ else{s.support=Math.min(5,s.support+1)}
+ s.started=Date.now();s.history.push({stage:t.stage,correct:correct,diagnosis:diagnosis.cause,support:s.support});ciSliceSave(s);
+ return {correct:correct,buddy:correct?"Good. Which clue proved it?":diagnosis.message,next:ciSliceTask(),stage:s.stage,support:s.support};
+}
+window.ChildIntelligenceVerticalSlice={model:ciSgInference,state:ciSlice,task:ciSliceTask,submit:ciSliceSubmit};
